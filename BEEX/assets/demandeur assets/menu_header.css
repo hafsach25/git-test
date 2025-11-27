@@ -1,0 +1,208 @@
+:root{
+    --beex-blue: #0049F9;
+    --beex-green: #01BD96;
+    --beex-red: #FF4757;
+    --beex-bg: #FBFCF9;
+    --beex-dark: #101315;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: var(--beex-bg);
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background:linear-gradient(145deg,var(--beex-blue),var(--beex-green));
+    color:white;
+    padding: 16px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 70px;
+}
+
+/* Menu button white */
+.menu-btn {
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 16px;
+    background: none;
+    border: none;
+    color: white;
+}
+
+/* Logo + user */
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--beex-blue);
+    text-decoration: none;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+    .user-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, var(--beex-blue), var(--beex-green));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .user-name {
+        font-weight: bold;
+        color: white;
+    }
+
+    /* Sidebar positioned below header */
+    .sidebar {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        height: calc(100% - 70px);
+        padding: 22px 16px;
+        backdrop-filter: blur(16px);
+        background: rgba(255,255,255,0.55);
+        border-right: 2px solid rgba(0,0,0,0.05);
+        box-shadow: 8px 0 30px rgba(0,0,0,0.12);
+        border-radius: 0 20px 20px 0;
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(.4,0,.2,1), 
+                    opacity 0.3s ease;
+        z-index: 2000;
+        overflow-y: auto;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .sidebar {
+        opacity: 0;
+    }
+
+    /* Menu */
+    .sidebar .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 20px;
+    }
+
+    /* Item de menu */
+    .sidebar .menu a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        color: var(--beex-dark);
+        transition: all .25s ease;
+        position: relative;
+    }
+
+    /* Icône */
+    .sidebar .menu a .icon {
+        font-size: 20px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        transition: all .25s ease;
+        background: rgba(0,73,249,0.06);
+    }
+
+    /* Hover magnifique */
+    .sidebar .menu a:hover {
+        background: rgba(0, 73, 249, 0.12);
+        color: var(--beex-blue);
+        transform: translateX(6px);
+    }
+
+    .sidebar .menu a:hover .icon {
+        background: var(--beex-blue);
+        color: white;
+        box-shadow: 0 4px 10px rgba(0,73,249,0.25);
+    }
+
+    /* Élément ACTIF */
+    .menu-item.active {
+        background: linear-gradient(90deg, var(--beex-blue), var(--beex-green));
+        color: white !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    .menu-item.active .icon {
+        background: rgba(255,255,255,0.18);
+        color: white;
+    }
+
+    /* Overlay */
+    .overlay {
+        position: fixed; 
+        inset: 70px 0 0 0;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(3px);
+        opacity:0; 
+        visibility:hidden; 
+        transition: .25s ease;
+        z-index: 850;
+    }
+    .overlay.show { 
+        opacity:1; 
+        visibility:visible; 
+    }
+
+    
+
+
+    .btn-logout {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        border-radius: 50px;
+        padding: 12px 24px;
+        background: var(--beex-red);
+        color: white;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        transition: 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+
+
+    .btn-logout:hover {
+        background: #FF2A32;
+        transform: scale(1.1);
+    }
+
+  
