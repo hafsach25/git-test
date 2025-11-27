@@ -16,7 +16,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6">
-                <img alt="Logo BEEX" class="logo-login">
+                <img src="../../assets/images/logo_beex2.png" alt="Logo BEEX" class="logo-login">
                 <h1>Bienvenue dans BEEX</h1>
                 <p>Gérez toutes vos demandes rapidement et en toute transparence.</p>
         </div>

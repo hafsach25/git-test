@@ -10,7 +10,7 @@
     <div class="container">
     <div class="row">
       <div class="col-lg-6">
-        <img src="../../assets/images/beex_logo.png" alt="BEEX Logo" class="logo">
+        <img src="../../assets/images/logo_beex2.png" alt="BEEX Logo" class="logo">
         <h1>Bienvenue sur BEEX</h1>
         <p>Votre espace intelligent pour gérer toutes vos demandes
 rapidement et en toute transparence.</p>
