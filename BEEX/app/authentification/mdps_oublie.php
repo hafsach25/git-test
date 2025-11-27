@@ -8,7 +8,7 @@
 <title>Mot de passe oublié – BEEX</title>
 
 <!-- Bootstrap 5 -->
-<link rel="stylesheet" href="authentic/bootstrap-5.3.8-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/bootstrap-5.3.8-dist/css/bootstrap.min.css">
 <!--<link rel="stylesheet" href="style.css"> -->
 </head>
 <body>
