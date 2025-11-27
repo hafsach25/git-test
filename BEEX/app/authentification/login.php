@@ -37,7 +37,7 @@
                                     <input type="password" id="password" name="password" class="form-input" required
                                         placeholder="Entrez votre mot de passe">
                                 </div>
-                                <button type="submit" class="submit-btn">Connexion</button>
+                                <button type="submit" class="submit-btn">Se connecter</button>
                                 <a href="mdps_oublie.php" class="forgot-password-link">Mot de passe oublié?</a>
                             </form>
                         </div>
