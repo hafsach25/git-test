@@ -7,18 +7,14 @@
     <script src="../../jquery/jquery-3.7.1.min.js"></script>
     <title>BEEX Demandeur</title>
 </head>
-
- <!-- Overlay -->
     <div id="overlay" class="overlay"></div>
-
-    <!-- Header -->
+   <!-- L'overlay est un élément qui sert de fond semi-transparent apparaissant derrière le menu latéral -->
     <header class="header">
         <div class="header-left" style="display:flex; align-items:center; gap:12px;">
-            <!-- Bouton menu blanc avec icône Bootstrap -->
-            <button id="menuToggle" class="menu-btn" aria-label="Ouvrir le menu" title="Menu">
+            <button id="menuToggle" class="menu-btn"  title="Menu">
                 <i class="bi bi-list"></i>
             </button>
-            <div class="logo" style="display:flex; align-items:center; gap:12px;">
+            <div class="logo" style="display:flex; align-items:center; gap:12px;"> <!-- aligner les elements horizentalements, centrer verticalement avec un espace de 12 px entre eux -->
                 <img src="../../assets/images/logo_beex2.png" alt="Logo BEEX" style="width:50px;">
                 <h4 style="margin:0; color:white;">Espace Demandeur</h4>
             </div>
@@ -26,8 +22,7 @@
      
     </header>
 
-    <!-- Sidebar sans marque BEEX -->
-    <aside id="sidebar" class="sidebar" style="display: flex; flex-direction: column;">
+    <aside id="sidebar" class="sidebar">
         <nav class="menu">
             <a href="#dashboard" class="menu-item active">
                 <span class="icon"><i class="bi bi-house-door-fill"></i></span>
@@ -48,7 +43,7 @@
         </nav>
 
      
-             <button id="logoutBtn" class="btn-logout" aria-label="Déconnexion" title="Déconnexion"><i class="bi bi-box-arrow-right"></i> Déconnexion</button>
+             <button id="logoutBtn" class="btn-logout" title="Déconnexion"><i class="bi bi-box-arrow-right"></i> Déconnexion</button>
 
         </div>
     </aside>
@@ -78,20 +73,13 @@
 
         $overlay.on('click', function(){ closeSidebar(); });
 
-        // Logout button
         $('#logoutBtn').on('click', function(){
             if(confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
                 window.location.href = '#logout';
             }
         });
 
-        // Close sidebar on escape
-        $(document).on('keydown', function(e){ 
-            if(e.key === 'Escape') { 
-                closeSidebar(); 
-                $avatarDropdown.removeClass('show'); 
-            } 
-        });
+       
     });
     </script>
 
