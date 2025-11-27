@@ -10,7 +10,6 @@ class Auth {
         $this->pdo = $db->pdo;
     }
 
-    // 🔍 Vérifie l'utilisateur dans les trois tables
     public function login($email, $password) {
 
         $roles = [
@@ -20,7 +19,7 @@ class Auth {
                 "pass_col" => "mdps_ad",
                 "id_col"    => "id_ad",
                 "name_col"  => "nom_complet_ad",
-                "dashboard" => "../BEEX/frontend/administrateur/dashboard.php"
+                "dashboard" => "../../BEEX/frontend/administrateur/dashboard.php"
             ],
             [
                 "table" => "validateur",
@@ -28,7 +27,7 @@ class Auth {
                 "pass_col"  => "mdps_v",
                 "id_col"    => "id_v",
                 "name_col"  => "nom_complet_v",
-                "dashboard" => "../BEEX/frontend/validateur/dashboard.php"
+                "dashboard" => "../../BEEX/frontend/validateur/dashboard.php"
             ],
             [
                 "table" => "demandeur",
@@ -36,26 +35,29 @@ class Auth {
                 "pass_col"  => "mdps_d",
                 "id_col"    => "id_d",
                 "name_col"  => "nom_complet_d",
-                "dashboard" => "../BEEX/frontend/demandeur/dashboard.php"
+                "dashboard" => "../../BEEX/frontend/demandeur/dashboard.php"
             ],
         ];
 
         foreach ($roles as $role) {
 
             $sql = "SELECT * FROM {$role['table']} WHERE {$role['email_col']} = ?";
+
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute(([$email]));
 
-            $user = $stmt->fetch();
+            $stmt->execute([$email]);
 
-            if ($user && password_verify($password, $user[$role['pass_col']])) {
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                // 🔐 Création de session
+            if ($user && $password === $user[$role['pass_col']]) {
+
+                // Création de session
                 $_SESSION["logged_in"] = true;
                 $_SESSION["role"] = $role["table"];
                 $_SESSION["user_id"] = $user[$role['id_col']];
                 $_SESSION["username"] = $user[$role['name_col']];
-
+                echo "<pre>Session: " . htmlspecialchars(print_r($_SESSION, true)) . "</pre>";
+                echo $role["dashboard"];
                 return $role["dashboard"];
             }
         }
