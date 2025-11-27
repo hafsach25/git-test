@@ -29,7 +29,7 @@ rapidement et en toute transparence.</p>
                     <input type="password" id="password" name="password" required>
                 </div>
                 <button type="submit">Connexion</button>
-                <a href="mot_de_passe_oublie.php" class="forgot-password">Mot de passe oublié?</a>
+                <a href="mdps_oublie.php" class="forgot-password">Mot de passe oublié?</a>
             </form>
         </div>
     </div>
