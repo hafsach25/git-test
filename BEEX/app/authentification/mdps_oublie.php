@@ -40,6 +40,5 @@
                         <a href="login.php" class="link-beex">Retour à la page de connexion</a>
                     </div>
                 </form>
-
             </div>
         </div>
