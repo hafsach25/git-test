@@ -13,18 +13,24 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-6">
-                <img src="../../assets/images/logo_beex2.png" alt="Logo BEEX" class="logo-login">
-                <h1>Bienvenue dans BEEX</h1>
-                <p>Gérez toutes vos demandes rapidement et en toute transparence.</p>
-        </div>
+<div class="login-page">
+        <div class="row  w-100 m-0">
+            <div class="col-lg-7 p-0">
+                <div class="info-section">
+                    <div class="info-content">
+                        <img src="../../assets/images/logo_beex2.png" alt="BEEX Logo" class="logo">
+                        <h1>Bienvenue sur BEEX</h1>
+                        <p>Votre espace intelligent pour gérer toutes vos demandes
+                            rapidement et en toute transparence.</p>
+                    </div>
+                </div>
+            </div>
 
-        <div class="col-md-6">
-            <div class="reset-card">
-                <h3 class="text-center">Changer mot de passe</h3>
-                <p class="text-center ">
+        <div class="col-lg-5 p-0">
+            <div class="form-section">
+                <div class="reset-card">
+                    <h3 class="text-center">Changer mot de passe</h3>
+                    <p class="text-center ">
                     Créez un mot de passe sécurisé et unique pour protéger votre compte.
                 </p>
                 <form>
