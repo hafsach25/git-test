@@ -16,7 +16,6 @@
 
 body {
   margin: 0;
-  font-family:Georgia, 'Times New Roman', Times, serif;
   background-color: var(--white);
   color: var(--text-dark);
   min-height: 100vh;
@@ -89,17 +88,17 @@ a {
     height :100%;
   }
 
-  .login-card {
+.login-card {
     background-color: var(--white);
-    border: 1px solid var(--primary-blue);
     border-radius: 18px;
+    border-top: 5px solid var(--primary-blue);
     box-shadow: var(--shadow);
     padding: 40px 35px 51px;
     display: flex;
     flex-direction: column;
     width: 100%;
     max-width: 420px;
-  }
+}
 
   .form-title {
     color: var(--primary-blue);
