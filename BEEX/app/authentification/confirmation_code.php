@@ -30,7 +30,7 @@
             <div class="col-lg-5 p-0">
                 <div class="form-section">
                     <div class="login-card">
-                        <h3 class="form-title">Mot de passe oublié</h3>
+                        <h2 class="form-title">Mot de passe oublié</h2>
                         <p class="form-subtitle">
                             Entrez le code de confirmation envoyé à votre email
                         </p>
@@ -38,7 +38,7 @@
                         <form class="login-form" action="" method="POST">
                             <div class="form-group">
                                 <label for="confirmation_code">Code de confirmation</label>
-                                <input type="text" id="confirmation_code" class="form-input "
+                                <input type="text" pattern="\d{6}" id="confirmation_code" class="form-input "
                                     placeholder="Entrez le code de confirmation" required>
                             </div>
                             <button type="submit" class="submit-btn"><a href="changer_mdps.php">Vérifier le
