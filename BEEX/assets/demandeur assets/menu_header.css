@@ -13,21 +13,34 @@ body {
     padding: 0;
 }
 
+/* Header */
 .header {
+    /* Dégradé de couleur : du bleu BEEX au vert BEEX, incliné à 145° */
     background:linear-gradient(145deg,var(--beex-blue),var(--beex-green));
+    /* Texte blanc par défaut pour tous les éléments du header */
     color:white;
+    /* Espace intérieur : 16px haut/bas, 24px gauche/droite */
     padding: 16px 24px;
+    /* Ombre légère sous le header : 0px horizontal, 2px vertical, 8px flou, 8% noir */
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    /* Active flexbox pour aligner les éléments horizontalement */
     display: flex;
-    justify-content: space-between;
+    /* Centre verticalement tous les éléments enfants */
     align-items: center;
+    /* Le header reste visible au scroll (sticky) */
     position: fixed;
+    /* Colle au haut de la page */
     top: 0;
+    /* Bord gauche à 0 pixel */
     left: 0;
+    /* Bord droit à 0 pixel (étire sur toute la largeur de l'écran) */
     right: 0;
+    /* Priorité d'affichage : reste au-dessus de tous les autres éléments */
     z-index: 1000;
+    /* Hauteur fixe de 70 pixels */
     height: 70px;
 }
+
 
 /* Menu button white */
 .menu-btn {

@@ -1,54 +1,32 @@
-
+<?php session_start();
+include __DIR__ . "/../../../backend/demandeur/importer_demandes.php"; 
+$demandes = $_SESSION['imported_demandes'] ?? []; 
+?>
 <head>
     <title>BEEX Demandeur - Tableau de bord</title>
     <link rel="stylesheet" href="../../assets/demandeur assets/dashboard.css"> 
     <link href="../../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-
-<body>
-
 <?php 
-// HEADER ET MENU
-include "header_menu.php"; 
-session_start();
-// STAT CARDS
-include "../../../backend/demandeur/stat_cards_process.php"; 
-?> 
 
+include "header_menu.php";
+?>
 <main class="main-content">
 
     <div class="page-header">
-        <h1 class="page-title">Tableau de bord</h1>
-        <p class="page-subtitle">Bienvenue, <?= htmlspecialchars($_SESSION['username'] ?? '') ?></p>
-    </div>
+        <h1 class="page-title">Mes demandes</h1>
 
-    <!-- STAT CARDS -->
-    <div class="stats-container">
-        <div class="stat-card blue">
-            <div class="stat-title">Demandes en cours</div>
-            <div class="stat-value"><?= $stats['en_cours'] ?></div>
-        </div>
-        <div class="stat-card green">
-            <div class="stat-title">Demandes validées</div>
-            <div class="stat-value"><?= $stats['validees'] ?></div>
-        </div>
-        <div class="stat-card red">
-            <div class="stat-title">Demandes rejetées</div>
-            <div class="stat-value"><?= $stats['rejetees'] ?></div>
-        </div>
-    </div>
 
     <?php 
-    // TABLEAU DES DEMANDES
-    $demandes = $_SESSION['imported_demandes'] ?? [];
 
+   
     if (empty($demandes)): ?>
         <p>Aucune demande trouvée.</p>
 
     <?php 
     else:  
-        $resultats = array_slice($demandes, 0, 3);
+       
     ?>
 
     <div class="table-section">
@@ -65,7 +43,7 @@ include "../../../backend/demandeur/stat_cards_process.php";
             </thead>
 
             <tbody>
-                <?php foreach($resultats as $demande): ?>
+                <?php foreach($demandes as $demande): ?>
                 <tr>
                     <td><strong>#<?= htmlspecialchars($demande['id_dm']) ?></strong></td>
 
@@ -77,14 +55,14 @@ include "../../../backend/demandeur/stat_cards_process.php";
                         <?php 
                             switch ($demande['status']) {
                                 case 'en_attente':
-                                    $badge = ' .badge-attente'; $txt = 'En attente'; break;
+                                    $badge = 'badge-attente'; $txt = 'En attente'; break;
                                 case 'en_cours':
                                     $badge = 'badge-en-cours'; $txt = 'En cours'; break;
                                 case 'validee':
                                     $badge = 'badge-validee'; $txt = 'Validée'; break;
                                 case 'traite':
                                     $badge = 'badge-traite'; $txt = 'Traité'; break;
-                                case 'Rejetée':
+                                case 'rejete':
                                     $badge = 'badge-rejetee'; $txt = 'Rejetée'; break;
                                 default:
                                     $badge = 'badge-default'; 
@@ -106,11 +84,8 @@ include "../../../backend/demandeur/stat_cards_process.php";
         </table>
     </div>
 
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="mes_demandes.php" class="btn-see-more">Voir plus</a>
-    </div>
-
+    
     <?php endif; ?>
 
 </main>
-</body>
+
