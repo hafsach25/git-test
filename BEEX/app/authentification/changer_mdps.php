@@ -37,7 +37,7 @@
                         <input type="email" class="form-control " placeholder="$#@!23HFS%$#FS">
                     </div>
 
-                    <button type="submit" class="btn btn-beex ">Enregistrer</button>
+                    <button type="submit" class="btn btn-beex "><a href="login.php">Enregistrer</button>
 
 
                 </form>
