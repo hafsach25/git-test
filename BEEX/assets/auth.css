@@ -1,1 +1,237 @@
-v
+:root {
+  --primary-blue: #0049f9;
+  --primary-green: #01bd96;
+  --text-dark: #212529;
+  --text-light: rgba(33, 37, 41, 0.75);
+  --white: #ffffff;
+  --border-light: #e0e0e0;
+  --shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--white);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+h1, h2, p, a, label, button, input {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+  .login-page {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .info-section {
+    flex: 1 1 57%;
+    background: linear-gradient(139deg, var(--primary-blue) 0%, var(--primary-green) 139.12%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    color: var(--white);
+  }
+
+  .info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 680px;
+    width: 100%;
+  }
+
+  .logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+  }
+
+  .welcome-heading {
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 1.1;
+  }
+
+  .welcome-subheading {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+
+  .form-section {
+    flex: 1 1 43%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 12px;
+  }
+
+  .login-card {
+    background-color: var(--white);
+    border: 1px solid var(--primary-blue);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 40px 35px 51px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .form-title {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 34px;
+    text-align: center;
+    margin-bottom: 4px; /* Approximate spacing */
+  }
+
+  .form-subtitle {
+    color: var(--text-light);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    margin-bottom: 24px; /* Approximate spacing */
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group label {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 24px;
+    color: var(--text-dark);
+  }
+
+  .form-input {
+    background-color: var(--white);
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    padding: 13px 12px;
+    font-size: 14px;
+    line-height: 1.2;
+    color: var(--text-dark);
+    width: 100%;
+  }
+
+  .form-input::placeholder {
+    color: var(--text-light);
+    opacity: 1;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+  }
+
+  .submit-btn {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 13px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .submit-btn:hover {
+    opacity: 0.9;
+  }
+
+  .forgot-password-link {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: right;
+    margin-top: 16px;
+    align-self: flex-end;
+  }
+  
+  .forgot-password-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive Styles */
+  @media (max-width: 992px) {
+    .login-page {
+      flex-direction: column;
+    }
+
+    .info-section {
+      flex-basis: auto;
+      min-height: 40vh;
+      text-align: center;
+      align-items: center;
+    }
+    
+    .info-content {
+      align-items: center;
+    }
+
+    .form-section {
+      flex-basis: auto;
+      padding: 40px 20px;
+    }
+    
+    .welcome-heading {
+      font-size: 48px;
+    }
+    
+    .welcome-subheading {
+      font-size: 18px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .welcome-heading {
+      font-size: 36px;
+    }
+    
+    .welcome-subheading {
+      font-size: 16px;
+    }
+    
+    .login-card {
+      padding: 30px 20px;
+      border: none;
+      box-shadow: none;
+    }
+  }

@@ -17,19 +17,19 @@ rapidement et en toute transparence.</p>
         </div>
       <div class="col-lg-6">
         <div class="login-container">
-            <h2>Connexion</h2>
-            <p>Accéder à votre tableau de bord</p>
-            <form action="../../core/authentification/login_process.php" method="POST">
+            <h2 class="form-title">Connexion</h2>
+            <p class="form-subtitle">Accéder à votre tableau de bord</p>
+            <form action="../../core/authentification/login_process.php" method="POST" class="login-form">
                 <div class="form-group">
-                   <label for="username">Email:</label>
-                   <input type="text" id="username" name="username" required>
+                   <label for="username" >Email:</label>
+                   <input type="text" id="username" name="username" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Mot de passe:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" class="form-input" required>
                 </div>
-                <button type="submit">Connexion</button>
-                <a href="mdps_oublie.php" class="forgot-password">Mot de passe oublié?</a>
+                <button type="submit" class="submit-btn">Connexion</button>
+                <a href="mdps_oublie.php" class="forgot-password-link">Mot de passe oublié?</a>
             </form>
         </div>
     </div>
