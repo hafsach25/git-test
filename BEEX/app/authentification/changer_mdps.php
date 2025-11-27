@@ -30,14 +30,14 @@
                 <form>
                     <div class="mb-3">
                         <label class="form-label">Nouveau mot de passe</label>
-                        <input type="email" class="form-control " placeholder="$#@!23HFS%$#FS">
+                        <input type="email" class="form-control " placeholder="Nouveau mot de passe">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">confirmation de mot de passe</label>
-                        <input type="email" class="form-control " placeholder="$#@!23HFS%$#FS">
+                        <input type="email" class="form-control " placeholder="confirmation mot de passe">
                     </div>
 
-                    <button type="submit" class="btn btn-beex "><a href="login.php">Enregistrer</button>
+                    <button type="submit" class="btn btn-beex "><a href="login.php">Enregistrer</a></button>
 
 
                 </form>
