@@ -20,22 +20,26 @@
                 <h1>Bienvenue dans BEEX</h1>
                 <p>Gérez toutes vos demandes rapidement et en toute transparence.</p>
         </div>
-        <div class="col-lg-6">
-                <h3 class="text-center ">Connexion</h3>
-                <p class="text-center ">Accédez à votre tableau de bord</p>
-                <form method="POST">
+
+        <div class="col-md-6">
+            <div class="reset-card">
+                <h3 class="text-center">Mot de passe oublié</h3>
+                <p class="text-center ">
+                    Entrez votre email pour recevoir un lien de réinitialisation
+                </p>
+
+                <form>
                     <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" name='email' class="form-control" placeholder="exemple@entreprise.com" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" name='password' class="form-control" placeholder="Votre mot de passe" required>
-                    </div>
-                    <button type="submit" class="btn btn-beex ">Se connecter</button>
-                    <div class="text-end ">
-                        <a href="#" class="link-beex">Mot de passe oublié ?</a>
+                        <input type="email" class="form-control " placeholder="exemple@entreprise.com">
                     </div>
 
+                    <button type="submit" class="btn btn-beex ">Envoyer le lien</button>
+
+                    <div class="text-center ">
+                        <a href="login.html" class="link-beex">Retour à la page de connexion</a>
+                    </div>
                 </form>
+
+            </div>
         </div>
