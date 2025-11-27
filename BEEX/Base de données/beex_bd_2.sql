@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 27 nov. 2025 à 11:31
+-- Généré le : jeu. 27 nov. 2025 à 18:22
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -67,6 +67,21 @@ CREATE TABLE `demande` (
   `transfere` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `demande`
+--
+
+INSERT INTO `demande` (`id_dm`, `id_typedebesoin`, `status`, `date_creation_dm`, `date_limite_dm`, `urgence_dm`, `description_dm`, `id_service`, `piece_jointe_dm`, `id_demandeur`, `transfere`) VALUES
+(1, 1, 'En attente', '2025-11-27 17:17:30', NULL, 'Moyenne', 'Besoin d\'un nouvel écran 27 pouces', 1, NULL, 1, 0),
+(2, 2, 'en cours', '2025-11-27 17:17:30', NULL, 'Haute', 'Licence JetBrains expirée', 2, NULL, 1, 0),
+(3, 3, 'rejeté', '2025-11-27 17:17:30', NULL, 'Faible', 'Accès VPN pour télétravail', 3, NULL, 1, 0),
+(13, 1, 'En attente', '2025-11-27 17:20:58', NULL, 'Haute', 'Erreur sur prime vacances', 1, NULL, 2, 0),
+(14, 2, 'en cours', '2025-11-27 17:20:58', NULL, 'Moyenne', 'Formation Management Agile', 2, NULL, 2, 0),
+(15, 3, 'traite', '2025-11-27 17:20:58', NULL, 'Faible', 'Déclaration naissance enfant', 3, NULL, 2, 0),
+(16, 1, 'En attente', '2025-11-27 17:21:23', NULL, 'Moyenne', 'Logo pour projet Alpha', 7, NULL, 3, 0),
+(17, 2, 'En attente', '2025-11-27 17:21:23', NULL, 'Haute', 'Budget Q4 Ads', 8, NULL, 3, 0),
+(18, 3, 'En attente', '2025-11-27 17:21:23', NULL, 'Urgent', 'Lancement produit bêta', 9, NULL, 3, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -83,6 +98,15 @@ CREATE TABLE `demandeur` (
   `poste_d` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `demandeur`
+--
+
+INSERT INTO `demandeur` (`id_d`, `email_d`, `mdps_d`, `nom_complet_d`, `id_validateur`, `id_dep`, `poste_d`) VALUES
+(1, 'demandeur.it@speedy.com', 'pass123', 'Ouahib Noura', 1, 1, 'Développeur Fullstack'),
+(2, 'demandeur.rh@speedy.com', 'pass123', 'Chabab Hafsa', 2, 2, 'Chargé de recrutement'),
+(3, 'demandeur.mkt@speedy.com', 'pass123', 'Melluoili Zakaria', 3, 3, 'Graphiste Senior');
+
 -- --------------------------------------------------------
 
 --
@@ -93,6 +117,15 @@ CREATE TABLE `departement` (
   `id_dep` int(11) NOT NULL,
   `nom_dep` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `departement`
+--
+
+INSERT INTO `departement` (`id_dep`, `nom_dep`) VALUES
+(1, 'Département IT'),
+(2, 'Ressources Humaines'),
+(3, 'Marketing & Communication');
 
 -- --------------------------------------------------------
 
@@ -119,6 +152,21 @@ CREATE TABLE `service` (
   `id_service` int(11) NOT NULL,
   `nom_service` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `service`
+--
+
+INSERT INTO `service` (`id_service`, `nom_service`) VALUES
+(1, 'Support Technique'),
+(2, 'Réseau & Sécurité'),
+(3, 'Développement'),
+(4, 'Gestion Paie'),
+(5, 'Formation'),
+(6, 'Administration RH'),
+(7, 'Design Graphique'),
+(8, 'Publicité Digitale'),
+(9, 'Relations Presse');
 
 -- --------------------------------------------------------
 
@@ -150,6 +198,16 @@ CREATE TABLE `type_besoin` (
   `id_champ_personnalise` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `type_besoin`
+--
+
+INSERT INTO `type_besoin` (`id_tb`, `nom_tb`, `description_tb`, `fichier_requis`, `limite_an`, `id_champ_personnalise`) VALUES
+(1, 'Achat Matériel Info', 'PC, Écran, Périphériques', 0, 0, NULL),
+(2, 'Licence Logiciel', 'Renouvellement ou achat', 0, 0, NULL),
+(3, 'Accès VPN', 'Demande accès distant', 0, 0, NULL),
+(4, 'Régularisation Salaire', 'Correction fiche de paie', 1, 0, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -163,6 +221,15 @@ CREATE TABLE `validateur` (
   `nom_complet_v` varchar(150) NOT NULL,
   `id_dep` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `validateur`
+--
+
+INSERT INTO `validateur` (`id_v`, `email_v`, `mdps_v`, `nom_complet_v`, `id_dep`) VALUES
+(1, 'validateur.it@speedy.com', 'pass123', 'Khalid chabab', 1),
+(2, 'validateur.rh@speedy.com', 'pass123', 'Ahmed ouahib', 2),
+(3, 'validateur.mkt@speedy.com', 'pass123', 'Mounir ghachi', 3);
 
 --
 -- Index pour les tables déchargées
@@ -260,19 +327,19 @@ ALTER TABLE `champ_personnalise`
 -- AUTO_INCREMENT pour la table `demande`
 --
 ALTER TABLE `demande`
-  MODIFY `id_dm` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_dm` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT pour la table `demandeur`
 --
 ALTER TABLE `demandeur`
-  MODIFY `id_d` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_d` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `departement`
 --
 ALTER TABLE `departement`
-  MODIFY `id_dep` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_dep` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `evenement`
@@ -284,7 +351,7 @@ ALTER TABLE `evenement`
 -- AUTO_INCREMENT pour la table `service`
 --
 ALTER TABLE `service`
-  MODIFY `id_service` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_service` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT pour la table `transfer`
@@ -296,13 +363,13 @@ ALTER TABLE `transfer`
 -- AUTO_INCREMENT pour la table `type_besoin`
 --
 ALTER TABLE `type_besoin`
-  MODIFY `id_tb` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_tb` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `validateur`
 --
 ALTER TABLE `validateur`
-  MODIFY `id_v` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_v` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Contraintes pour les tables déchargées
