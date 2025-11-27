@@ -37,7 +37,7 @@
                     <button type="submit" class="btn btn-beex ">Envoyer le lien</button>
 
                     <div class="text-center ">
-                        <a href="login.html" class="link-beex">Retour à la page de connexion</a>
+                        <a href="login.php" class="link-beex">Retour à la page de connexion</a>
                     </div>
                 </form>
 
