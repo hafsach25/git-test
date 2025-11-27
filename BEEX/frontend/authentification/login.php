@@ -31,8 +31,8 @@
                         <form action="../../../backend/authentification/login_process.php" method="POST"
                             class="login-form">
                             <div class="form-group">
-                                <label for="username">Email:</label>
-                                <input type="text" id="username" name="username" class="form-input" required
+                                <label for="email">Email:</label>
+                                <input type="text" id="email" name="email" class="form-input" required
                                     placeholder="Entrez votre email">
                             </div>
                             <div class="form-group">
