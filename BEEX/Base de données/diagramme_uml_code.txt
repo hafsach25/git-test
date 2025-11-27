@@ -1,0 +1,136 @@
+@startuml
+left to right direction
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+skinparam classFontSize 13
+skinparam classAttributeFontSize 11
+skinparam dpi 120
+skinparam rectangle {
+  Padding 30
+  RoundCorner 15
+}
+
+' ============================
+'    GROUPES VISUELS ESPACÉS
+' ============================
+
+rectangle "👤 Utilisateurs" as U #DDDDFF {
+  class Administrateur {
+    +id_ad : int
+    +email_ad : varchar
+    +mdps_ad : varchar
+    +nom_complet_ad : varchar
+  }
+
+ 
+  
+  class Validateur {
+    +id_v : int
+    +email_v : varchar
+    +mdps_v : varchar
+    +nom_complet_v : varchar
+    +id_dep : int
+  }
+
+  
+  
+  class Demandeur {
+    +id_d : int
+    +email_d : varchar
+    +mdps_d : varchar
+    +nom_complet_d : varchar
+    +id_validateur : int
+    +id_dep : int
+    +poste_d : varchar
+  }
+}
+
+rectangle "🏢 Structure" as S #FFEECC {
+  class Departement {
+    +id_dep : int
+    +nom_dep : varchar
+  }
+
+  
+  
+  class Service {
+    +id_service : int
+    +nom_service : varchar
+  }
+}
+
+rectangle "📝 Demandes & Types" as D #E8F8E8 {
+  class Demande {
+    +id_dm : int
+    +status : varchar
+    +date_creation_dm : datetime
+    +date_limite_dm : date
+    +urgence_dm : varchar
+    +description_dm : text
+    +piece_jointe_dm : varchar
+    +transfere : tinyint
+  }
+
+  
+  
+  class Type_Besoin {
+    +id_tb : int
+    +nom_tb : varchar
+    +description_tb : text
+    +fichier_requis : tinyint
+    +limite_an : int
+  }
+
+  
+  
+  class Champ_Personnalise {
+    +id_cp : int
+    +nom_cp : varchar
+    +type_cp : varchar
+    +obligatoire_cp : tinyint
+  }
+}
+
+rectangle "🔄 Autres" as O #FFE0E0 {
+  class Transfer {
+    +id_tr : int
+    +date_debut_tr : datetime
+    +date_fin_tr : datetime
+    +raison_tr : text
+  }
+
+  
+  
+  class Evenement {
+    +id_ev : int
+    +date_ev : datetime
+    +nom_complet_ev : varchar
+    +type_evenement_ev : varchar
+    +description_ev : text
+    +adresse_ip_ev : varchar
+  }
+}
+
+' ============================
+'        RELATIONS
+' ============================
+
+Administrateur --> Demandeur : gère
+Administrateur --> Validateur : gère
+
+Demande --> Type_Besoin : contient
+Demande --> Service : affectée à
+Demande --> Demandeur : créée par
+
+Type_Besoin --> Champ_Personnalise : peut possèder
+
+Demandeur --> Departement : appartient à
+Validateur --> Departement : appartient à
+Validateur --> Demandeur : valide
+
+Transfer --> Validateur : créateur
+Transfer --> Validateur : recepteur
+
+@enduml
