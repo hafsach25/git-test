@@ -25,6 +25,7 @@
             </div>
         </div>
 
+        
         <div class="col-lg-5 p-0">
             <div class="form-section">
                 <div class="login-card">
