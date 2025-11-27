@@ -34,7 +34,7 @@
                         <input type="email" class="form-control " placeholder="exemple@entreprise.com">
                     </div>
 
-                    <button type="submit" class="btn btn-beex ">Envoyer le lien</button>
+                    <button type="submit" class="btn btn-beex "><a href="confirmation_code.php">Envoyer le lien</a></button>
 
                     <div class="text-center ">
                         <a href="login.php" class="link-beex">Retour à la page de connexion</a>
