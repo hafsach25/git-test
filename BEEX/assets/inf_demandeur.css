@@ -1,0 +1,89 @@
+:root {
+  --primary-blue: #0049f9;
+  --primary-green: #01bd96;
+  --text-dark: #212529;
+  --text-light: rgba(33, 37, 41, 0.75);
+  --white: #ffffff;
+  --border-light: #e0e0e0;
+  --shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.12);
+}
+.retour_dashboard {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    display: inline-block;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.main-content {
+    margin-top: 8px;
+    padding: 10px;
+}
+
+.cote{
+    margin-top: 10px;
+    padding: 20px;
+
+
+}
+.cote h2{
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-blue);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+
+}
+.btn-container{
+    display: flex;
+    justify-content: space-between; /* Annuler à gauche / Enregistrer à droite */
+    align-items: center;
+}
+.btn-save {
+    background: var(--primary-blue);
+    color:white;
+    
+    padding: 10px 28px;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    margin-right: 40px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.btn-cancel{
+    background: white;
+    color:var(--primary-blue);
+    
+    padding: 10px 28px;
+    font-weight: bold;
+    border-radius: 12px;
+    border:2px solid var(--primary-blue);
+    margin-left:40px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+
+}
+.btn-save:hover {
+    background: var(--primary-green);
+}
+.btn-cancel:hover{
+    background: var(--primary-green);
+
+}
+.form-control[readonly] {
+    background: #f2f4f7;
+    border: 1px solid #d4d8dd;
+    cursor: not-allowed;
+}
+.my-4 h4{
+    color:var(--primary-green);
+    font-weight:bold;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+.mb-3{
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.border-form{
+
+}
