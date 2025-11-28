@@ -34,6 +34,12 @@ if (isset($_POST['save_password'])) {
               } else {
                 echo "<script>alert('Erreur lors de la modification.');</script>";}}}
 if (isset($_POST['revenir_bord'])){
+    if (isset($_POST['revenir_bord'])) {
+    // rediriger vers le dashboard du demandeur
+    header("Location: dashboard.php");
+    exit;
+}
+
 
 }
 
