@@ -59,10 +59,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 $_SESSION["user_id"] = $user[$role['id_col']];
                 $_SESSION["username"] = $user[$role['name_col']];
                 $_SESSION["email"] = $user[$role['email_col']]; 
-                echo "<pre>Session: " . htmlspecialchars(print_r($_SESSION, true)) . "</pre>";
-                echo $role["dashboard"];
                 return $role["dashboard"];
-                echo json_encode($_SESSION);
                 
             }
         }
