@@ -1,3 +1,11 @@
+ :root{
+    --beex-blue: #0049F9;
+    --beex-green: #01BD96;
+    --beex-red: #FF4757;
+    --beex-bg: #FBFCF9;
+    --beex-dark: #101315;
+}
+
  .main-content {
         margin-top: 70px;
         padding: 40px;
@@ -122,3 +130,108 @@
         cursor: pointer;
     }
     .btn-add:hover { background: var(--beex-green); }
+    .filters-card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    border-top: 4px solid var(--beex-blue);
+}
+
+.filters-card h5 {
+    color: var(--beex-blue);
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.filter-select {
+    height: 45px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    padding: 0 12px;
+    font-size: 15px;
+}
+
+.filter-select:focus {
+    border-color: var(--beex-blue);
+    box-shadow: 0 0 0 .2rem rgba(0,73,249,0.25);
+    outline: none;
+}
+
+
+
+.page-header {
+    margin-bottom: 35px;
+}
+
+.page-header h1 {
+    color: var(--beex-blue);
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    color: var(--beex-dark);
+    opacity: 0.7;
+    font-size: 16px;
+}
+
+/* Filters Card */
+.filters-card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    border-top: 4px solid var(--beex-blue);
+}
+
+.filters-card h5 {
+    color: var(--beex-blue);
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.filter-select {
+    height: 45px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    padding: 0 12px;
+    font-size: 15px;
+}
+
+.filter-select:focus {
+    border-color: var(--beex-blue);
+    box-shadow: 0 0 0 .2rem rgba(0,73,249,0.25);
+    outline: none;
+}
+/* Pagination */
+.pagination-beex {
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.pagination-beex .page-link {
+    color: var(--beex-blue);
+    border: 2px solid #e0e0e0;
+    margin: 0 3px;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 500;
+}
+
+.pagination-beex .page-link:hover {
+    background: var(--beex-blue);
+    color: white;
+    border-color: var(--beex-blue);
+}
+
+.pagination-beex .page-item.active .page-link {
+    background: var(--beex-blue);
+    border-color: var(--beex-blue);
+}
+

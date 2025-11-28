@@ -1,4 +1,6 @@
-
+<?php
+session_start();
+?>
 <head>
     <title>BEEX Demandeur - Tableau de bord</title>
     <link rel="stylesheet" href="../../assets/demandeur assets/dashboard.css"> 
@@ -11,7 +13,7 @@
 <?php 
 // HEADER ET MENU
 include "header_menu.php"; 
-session_start();
+
 // STAT CARDS
 include "../../../backend/demandeur/stat_cards_process.php"; 
 ?> 

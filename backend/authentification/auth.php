@@ -58,6 +58,8 @@ class Auth {
                 $_SESSION["username"] = $user[$role['name_col']];
                 echo $role["dashboard"];
                 return $role["dashboard"];
+                echo json_encode($_SESSION);
+                
             }
         }
 

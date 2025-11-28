@@ -1,5 +1,4 @@
 <?php
-
 include "auth.php";
 
 $email = $_POST['email'] ?? '';
@@ -16,3 +15,4 @@ if ($redirect) {
    header("Location: ../../BEEX/frontend/authentification/login.php?error=" . urlencode($error));
     exit;
 }
+?>
