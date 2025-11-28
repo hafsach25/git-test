@@ -59,7 +59,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 $_SESSION["user_id"] = $user[$role['id_col']];
                 $_SESSION["username"] = $user[$role['name_col']];
                 $_SESSION["email"] = $user[$role['email_col']]; 
-                return $role["dashboard"];
+                 return $role["dashboard"];
                 
             }
         }
