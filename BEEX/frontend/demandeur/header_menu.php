@@ -24,18 +24,15 @@
 
     <aside id="sidebar" class="sidebar">
         <nav class="menu">
-            <a href="#dashboard" class="menu-item active">
+            <a href="dashboard.php" class="menu-item active">
                 <span class="icon"><i class="bi bi-house-door-fill"></i></span>
                 <span>Dashboard</span>
             </a>
-            <a href="#mes-demandes" class="menu-item">
+            <a href="mes_demandes.php" class="menu-item">
                 <span class="icon"><i class="bi bi-file-earmark-text"></i></span>
                 <span>Mes demandes</span>
             </a>
-            <a href="#historique" class="menu-item">
-                <span class="icon"><i class="bi bi-clock-history"></i></span>
-                <span>Historique</span>
-            </a>
+ 
              <a href="info_personnelles.php" class="menu-item">
                 <span class="icon"><i class="bi bi-person-circle"></i></span>
                 <span>Mes informations</span>
@@ -78,6 +75,19 @@
                 window.location.href = '#logout';
             }
         });
+        function selectedMenuItem(){
+            var path = window.location.pathname;
+            var page = path.split("/").pop();
+            $('.menu-item').each(function(){
+                var href = $(this).attr('href');
+                if(href === page){
+                    $(this).addClass('active');
+                } else {
+                    $(this).removeClass('active');
+                }
+            });
+        }
+        selectedMenuItem();
 
        
     });

@@ -50,7 +50,7 @@ class Auth {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && $password === $user[$role['pass_col']]) {
-
+                
                 // Création de session
                 $_SESSION["logged_in"] = true;
                 $_SESSION["role"] = $role["table"];
@@ -60,6 +60,8 @@ class Auth {
                 echo "<pre>Session: " . htmlspecialchars(print_r($_SESSION, true)) . "</pre>";
                 echo $role["dashboard"];
                 return $role["dashboard"];
+                echo json_encode($_SESSION);
+                
             }
         }
 
