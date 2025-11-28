@@ -11,11 +11,9 @@ class Auth {
     }
 
     public function login($email, $password) {
-        
-    if (session_status() === PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE) {
         session_start();
-    }
-
+    }    
         $roles = [
             [
                 "table" => "administrateur",
@@ -61,10 +59,7 @@ class Auth {
                 $_SESSION["user_id"] = $user[$role['id_col']];
                 $_SESSION["username"] = $user[$role['name_col']];
                 $_SESSION["email"] = $user[$role['email_col']]; 
-                echo "<pre>Session: " . htmlspecialchars(print_r($_SESSION, true)) . "</pre>";
-                echo $role["dashboard"];
-                return $role["dashboard"];
-                echo json_encode($_SESSION);
+                 return $role["dashboard"];
                 
             }
         }
