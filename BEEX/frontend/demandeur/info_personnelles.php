@@ -5,10 +5,7 @@ require_once __DIR__ .  '/../../../backend/authentification/database.php';
 $db = new Database();
 $conn = $db->pdo;
 
-<<<<<<< Updated upstream
-var_dump($_SESSION);
-=======
->>>>>>> Stashed changes
+
 // Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     header('Location: ../../BEEX/frontend/authentification/login.php');
