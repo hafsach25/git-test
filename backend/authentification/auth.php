@@ -11,6 +11,7 @@ class Auth {
     }
 
     public function login($email, $password) {
+<<<<<<< Updated upstream
 
         
     if (session_status() === PHP_SESSION_NONE) {
@@ -18,6 +19,9 @@ class Auth {
     }
 
 
+=======
+    
+>>>>>>> Stashed changes
         $roles = [
             [
                 "table" => "administrateur",
