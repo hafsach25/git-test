@@ -1,5 +1,5 @@
 <?php
-/*session_start();
+session_start();
 
 // Vérifier connexion
 if (!isset($_SESSION['logged_in'])) {
@@ -8,7 +8,7 @@ if (!isset($_SESSION['logged_in'])) {
 }
 
 include "../../../backend/demandeur_traitm/recup_detail_demand.php";
-
+/*
 $id = $_GET['id'] ?? null;
 
 if (!$id) {
