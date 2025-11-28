@@ -35,7 +35,7 @@ class Auth {
                 "pass_col"  => "mdps_d",
                 "id_col"    => "id_d",
                 "name_col"  => "nom_complet_d",
-                "dashboard" => "../../BEEX/frontend/demandeur/dashboard.php"
+                "dashboard" => "../../BEEX/frontend/demandeur/info_personnelles.php"
             ],
         ];
 
@@ -56,6 +56,7 @@ class Auth {
                 $_SESSION["role"] = $role["table"];
                 $_SESSION["user_id"] = $user[$role['id_col']];
                 $_SESSION["username"] = $user[$role['name_col']];
+                $_SESSION["email"] = $user[$role['email_col']]; 
                 echo "<pre>Session: " . htmlspecialchars(print_r($_SESSION, true)) . "</pre>";
                 echo $role["dashboard"];
                 return $role["dashboard"];

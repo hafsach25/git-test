@@ -36,7 +36,7 @@
                 <span class="icon"><i class="bi bi-clock-history"></i></span>
                 <span>Historique</span>
             </a>
-             <a href="#mes_info" class="menu-item">
+             <a href="info_personnelles.php" class="menu-item">
                 <span class="icon"><i class="bi bi-person-circle"></i></span>
                 <span>Mes informations</span>
             </a>
