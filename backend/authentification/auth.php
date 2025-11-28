@@ -11,11 +11,15 @@ class Auth {
     }
 
     public function login($email, $password) {
+<<<<<<< Updated upstream
         
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
 
+=======
+    
+>>>>>>> Stashed changes
         $roles = [
             [
                 "table" => "administrateur",
