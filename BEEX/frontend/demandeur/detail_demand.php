@@ -22,7 +22,7 @@ $demande = $demandeur->getDemandeById($id);
 if (!$demande) {
     echo "❌ Demande introuvable.";
     exit;
-}*/
+}
 session_start();
 
 // Si tu veux vérifier que seul un demandeur peut voir :
@@ -30,7 +30,7 @@ if (!isset($_SESSION['email'])) {
     header("Location: ../../../beex/frontend/authentification/login.php");
     exit;
 }
-
+*/
 include __DIR__ . '/../../../backend/authentification/database.php';
 
 class Detail_demand {
@@ -64,7 +64,7 @@ WHERE d.id_dm = ?";
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
-
+/*
 // Vérifie si "id" existe dans l’URL
 $id = $_GET["id"] ?? null;
 if (!$id) {
@@ -78,7 +78,7 @@ $demande = $model->getDemandeById($id);
 if (!$demande) {
     die("❌ Demande introuvable !");
 }
-
+*/
 ?>
 <!DOCTYPE html>
 

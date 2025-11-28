@@ -1,9 +1,11 @@
 <?php
+session_start();
 include __DIR__ . '/../../../backend/demandeur_traitm/recup_par_email.php';
 require_once __DIR__ .  '/../../../backend/authentification/database.php';
 $db = new Database();
 $conn = $db->pdo;
-session_start();
+
+var_dump($_SESSION);
 // Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     header('Location: ../../BEEX/frontend/authentification/login.php');
@@ -11,6 +13,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 }
 
 $email = $_SESSION['email'] ?? null;
+var_dump($email);
 $demandeur = new Demandeur();
 $user = $demandeur->getByEmail($email);
 if (!$user) {
@@ -105,7 +108,7 @@ include ("header_menu.php") ?>
                     <div class="btn-container">
 
 
-                        <button type="button" class="btn-cancel mt-3" name="revenir_bord">Annuler</button>
+                        <button type="submit" class="btn-cancel mt-3" name="revenir_bord">Annuler</button>
                         <button type="submit" class="btn-save mt-3" name="save_password" >Enregistrer</button>
                     </div>
                 </form>

@@ -11,6 +11,10 @@ class Auth {
     }
 
     public function login($email, $password) {
+        
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
 
         $roles = [
             [
@@ -35,7 +39,7 @@ class Auth {
                 "pass_col"  => "mdps_d",
                 "id_col"    => "id_d",
                 "name_col"  => "nom_complet_d",
-                "dashboard" => "../../BEEX/frontend/demandeur/info_personnelles.php"
+                "dashboard" => "../../BEEX/frontend/demandeur/dashboard.php"
             ],
         ];
 

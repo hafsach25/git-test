@@ -42,7 +42,7 @@
      
              <button id="logoutBtn" class="btn-logout" title="Déconnexion"><i class="bi bi-box-arrow-right"></i> Déconnexion</button>
 
-        </div>
+      
     </aside>
  
     <script>
