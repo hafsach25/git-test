@@ -72,7 +72,7 @@
 
         $('#logoutBtn').on('click', function(){
             if(confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-                window.location.href = '#logout';
+                window.location.href = '../../../backend/authentification/logout.php';
             }
         });
         function selectedMenuItem(){
