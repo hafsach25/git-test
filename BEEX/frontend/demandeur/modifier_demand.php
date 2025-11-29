@@ -1,118 +1,150 @@
 <?php
 session_start();
-include __DIR__ . '/../../../backend/authentification/database.php';// inclure la connexion à la BD
+require_once __DIR__ . '/../../../backend/authentification/database.php';
+require_once __DIR__ . '/../../../backend/demandeur_traitm/change_modifi.php';
 
-// Supposons que tu passes un id_demande pour modifier
-$id_demande = $_GET['id'] ?? 0;
+$db = new Database();
+$connexion = $db->pdo;
 
-// Récupérer les informations depuis la BD
-$query = $connexion->prepare("SELECT * FROM demande WHERE id_dm = ?");
-$query->execute([$id_demande]);
-$demande = $query->fetch(PDO::FETCH_ASSOC);
+// Vérifier connexion
+if (!isset($_SESSION['logged_in'])) {
+    header("Location: ../../BEEX/frontend/authentification/login.php");
+    exit;
+}
 
+$id_dm = $_GET['id'] ?? null;
+if (!$id_dm) {
+    die("Demande introuvable.");
+}
+
+$demandeObj = new changDeman();
+$demande = $demandeObj->getDemandeById($id_dm);
+
+if (!$demande) {
+    die("Demande non trouvée.");
+}
+
+// Pré-remplissage
 $type_besoin = $demande['type_besoin'] ?? '';
 $description = $demande['description'] ?? '';
 $urgence = $demande['urgence'] ?? '';
 $date_limite = $demande['date_limite'] ?? '';
-// Pour les fichiers, tu peux afficher un lien ou un nom si nécessaire
 $attachments = $demande['attachments'] ?? '';
-?>
+$previousPage = $_SERVER['HTTP_REFERER'] ?? 'dashboard.php';
 
+// Traitement du formulaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $type_besoin_new = $_POST['type_besoin'] ?? null;
+    $description_new = $_POST['description'] ?? '';
+    $urgence_new = $_POST['urgence'] ?? '';
+    $date_limite_new = $_POST['date_limite'] ?? '';
+
+    if (!$type_besoin_new) {
+        die("Veuillez sélectionner un type de besoin.");
+    }
+
+    $filename = $attachments; // conserver fichier existant
+
+    // Upload du fichier si présent
+    if (!empty($_FILES['attachments']['name'][0])) {
+        $file = $_FILES['attachments']['name'][0];
+        $tmp_name = $_FILES['attachments']['tmp_name'][0];
+        $destination = __DIR__ . '/../../uploads/' . basename($file);
+        if (move_uploaded_file($tmp_name, $destination)) {
+            $filename = $file;
+        }
+    }
+
+    // Mise à jour de la demande
+    $demandeObj->updateDemande($id_dm, $type_besoin_new, $description_new, $urgence_new, $date_limite_new, $filename);
+
+    // Message de succès via session
+    echo "<script>
+            alert('Les modifications ont été enregistrées avec succès !');
+            window.location.href ='dashboard.php';
+          </script>";
+    exit;
+}
+?>
 <!DOCTYPE html>
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>informations personnelles </title>
+    <title>Modifier la demande</title>
     <link href="../../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/inf_demandeur.css">
 </head>
 
 <body>
-    <?php
-include ("header_menu.php") ?>
+    <?php include("header_menu.php"); ?>
+
     <div class="cote">
-        <a href="dashboard.php" class="retour_dashboard">← Retour à la page d'acceuil</a>
-        <h2>Modifier une demande</h2>
+        <a href="<?= htmlspecialchars($previousPage) ?>" class="retour_dashboard"><i class="bi bi-arrow-left"></i>
+            Retour à la page d'accueil</a>
+        <h2>Modifier la demande {<?= htmlspecialchars($id_dm) ?>}</h2>
     </div>
+
     <div class="main-content">
         <div class="form-wrapper d-flex justify-content-center">
-            <div class="card shadow-sm p-4" >
-                <form>
+            <div class="card shadow-sm p-4">
+                <form method="post" action="" enctype="multipart/form-data">
                     <!-- Type de besoin -->
                     <div class="mb-4">
-                        <label for="type_besoin" class="form-label">
-                            Type de besoin
-                            <span class="required-indicator">*</span>
-                        </label>
-<select id="type_besoin" name="type_besoin" class="form-control" required>
-    <option value="" <?= $type_besoin == '' ? 'selected' : '' ?>>Sélectionnez un type</option>
-    <option value="infrastructure" <?= $type_besoin == 'infrastructure' ? 'selected' : '' ?>>Infrastructure IT</option>
-    <option value="logiciels" <?= $type_besoin == 'logiciels' ? 'selected' : '' ?>>Logiciels</option>
-    <option value="formation" <?= $type_besoin == 'formation' ? 'selected' : '' ?>>Formation</option>
-    <option value="equipement" <?= $type_besoin == 'equipement' ? 'selected' : '' ?>>Équipement</option>
-    <option value="services" <?= $type_besoin == 'services' ? 'selected' : '' ?>>Services externes</option>
-    <option value="autre" <?= $type_besoin == 'autre' ? 'selected' : '' ?>>Autre</option>
-</select>
+                        <label for="type_besoin" class="form-label">Type de besoin <span
+                                class="required-indicator">*</span></label>
+                        <select id="type_besoin" name="type_besoin" class="form-control" required>
+                            <option value="">Sélectionnez un type</option>
+                            <option value="1" <?= $type_besoin == 1 ? 'selected' : '' ?>>Achat Matériel Info</option>
+                            <option value="2" <?= $type_besoin == 2 ? 'selected' : '' ?>>Licence Logiciel</option>
+                            <option value="3" <?= $type_besoin == 3 ? 'selected' : '' ?>>Accès VPN</option>
+                            <option value="4" <?= $type_besoin == 4 ? 'selected' : '' ?>>Régularisation Salaire</option>
+                        </select>
                     </div>
 
                     <!-- Description -->
                     <div class="mb-4">
-                        <label for="description" class="form-label">
-                            Description
-                            <span class="required-indicator">*</span>
-                        </label>
-<textarea id="description" name="description" class="form-control" rows="6" required><?= htmlspecialchars($description) ?></textarea>
+                        <label for="description" class="form-label">Description <span
+                                class="required-indicator">*</span></label>
+                        <textarea id="description" name="description" class="form-control" rows="6"
+                            required><?= htmlspecialchars($description) ?></textarea>
                         <div class="form-text-muted">Décrivez votre besoin de manière claire et détaillée</div>
                     </div>
 
                     <!-- Urgence -->
                     <div class="mb-4">
-                        <label for="urgence" class="form-label">
-                            Urgence
-                            <span class="required-indicator">*</span>
-                        </label>
-<select id="urgence" name="urgence" class="form-control" required>
-    <option value="" <?= $urgence == '' ? 'selected' : '' ?>>Sélectionnez le niveau d'urgence</option>
-    <option value="faible" <?= $urgence == 'faible' ? 'selected' : '' ?>>Faible</option>
-    <option value="normale" <?= $urgence == 'normale' ? 'selected' : '' ?>>Normale</option>
-    <option value="haute" <?= $urgence == 'haute' ? 'selected' : '' ?>>Haute</option>
-    <option value="critique" <?= $urgence == 'critique' ? 'selected' : '' ?>>Critique</option>
-</select>
+                        <label for="urgence" class="form-label">Urgence <span
+                                class="required-indicator">*</span></label>
+                        <select id="urgence" name="urgence" class="form-control" required>
+                            <option value="">Sélectionnez le niveau d'urgence</option>
+                            <option value="Faible" <?= $urgence == 'Faible' ? 'selected' : '' ?>>Faible</option>
+                            <option value="Normale" <?= $urgence == 'Normale' ? 'selected' : '' ?>>Normale</option>
+                            <option value="Haute" <?= $urgence == 'Haute' ? 'selected' : '' ?>>Haute</option>
+                            <option value="critique" <?= $urgence == 'critique' ? 'selected' : '' ?>>Critique</option>
+                        </select>
                     </div>
 
                     <!-- Date limite -->
                     <div class="mb-4">
-                        <label for="date_limite" class="form-label">
-                            Date limite
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <input type="date" id="date_limite" name="date_limite" class="form-control" value="<?= $date_limite ?>" required>
-
-                        <div class="form-text-muted">Sélectionnez la date avant laquelle le besoin doit être satisfait
-                        </div>
+                        <label for="date_limite" class="form-label">Date limite <span
+                                class="required-indicator">*</span></label>
+                        <input type="date" id="date_limite" name="date_limite" class="form-control"
+                            value="<?= $date_limite ?>" required>
                     </div>
 
                     <!-- Pièces jointes -->
-                    <!--<div class="mb-4">
-                        <label for="attachments" class="form-label">
-                            Pièces jointes
-                        </label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="attachments" name="attachments" class="form-control input-beex"
-                                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" multiple>
-                        </div>
-                        <div class="form-text-muted">Formats acceptés : PDF, Word, Excel, Images (JPG, PNG)</div>
-                    </div>-->
                     <?php if ($attachments) : ?>
-    <p>Fichiers existants : <a href="../../uploads/<?= $attachments ?>" target="_blank"><?= $attachments ?></a></p>
-<?php endif; ?>
-<input type="file" id="attachments" name="attachments" class="form-control" multiple>
+                    <p>Fichier existant : <a href="../../uploads/<?= $attachments ?>"
+                            target="_blank"><?= $attachments ?></a></p>
+                    <?php endif; ?>
+                    <input type="file" id="attachments" name="attachments[]" class="form-control" multiple>
 
-                    <!-- Form Actions -->
-                    <div class="btn-container">
-                        <button type="button" class="btn-reinit">Reinitialiser</button>
-                        <button type="button" class="btn-cancel">Annuler</button>
+                    <!-- Boutons -->
+                    <div class="btn-container mt-3 d-flex gap-3">
+                        <button type="reset" class="btn-reinit">Réinitialiser</button>
+                        <a href="<?= htmlspecialchars($previousPage) ?>"
+                            class="btn-cancel text-decoration-none">Annuler</a>
                         <button type="submit" class="btn-save">Enregistrer les modifications</button>
                     </div>
                 </form>
@@ -120,3 +152,5 @@ include ("header_menu.php") ?>
         </div>
     </div>
 </body>
+
+</html>

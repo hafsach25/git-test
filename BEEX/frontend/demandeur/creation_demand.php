@@ -1,50 +1,80 @@
+<?php
+session_start();
+require_once __DIR__ . '/../../../backend/demandeur_traitm/ajout_demand.php';
+
+if (!isset($_SESSION['logged_in'])) {
+    header("Location: ../../BEEX/frontend/authentification/login.php");
+    exit;
+}
+
+$id_demandeur = $_SESSION['user_id'] ?? null;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $demand_obj = new AddDemande();
+    $demand_nv = $demand_obj->addDemandeById($id_demandeur);
+
+    if ($demand_nv) {
+        $_SESSION['success_message'] = "La demande a été ajoutée avec succès !";
+        header("Location: dashboard.php");
+        exit;
+    } else {
+        $error = "Aucune demande n'a été ajoutée.";
+    }
+}
+?>
+
 <!DOCTYPE html>
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creation du demande</title>
+    <title>Création d'une demande</title>
     <link href="../../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/inf_demandeur.css">
 </head>
 
 <body>
-    <?php
-       include ("header_menu.php") 
-    ?>
+    <?php include("header_menu.php"); ?>
+
     <div class="cote">
-        <a href="dashboard.php" class="retour_dashboard">← Retour à la page d'acceuil</a>
-        <h2>Creer une demande</h2>
+        <a href="dashboard.php" class="retour_dashboard">← Retour à la page d'accueil</a>
+        <h2>Créer une demande</h2>
     </div>
 
     <div class="main-content">
         <div class="form-wrapper d-flex justify-content-center">
             <div class="card shadow-sm p-4">
-                <form>
+                <form action="" method="POST" enctype="multipart/form-data">
                     <!-- Type de besoin -->
                     <div class="mb-4">
                         <label for="type_besoin" class="form-label">
-                            Type de besoin
-                            <span class="required-indicator">*</span>
+                            Type de besoin <span class="required-indicator">*</span>
                         </label>
-                        <select id="type_besoin" name="type_besoin" class="form-control " required>
+                        <select id="type_besoin" name="type_besoin" class="form-control" required>
                             <option value="" selected>Sélectionnez un type</option>
                             <option value="infrastructure">Infrastructure IT</option>
                             <option value="logiciels">Logiciels</option>
                             <option value="formation">Formation</option>
                             <option value="equipement">Équipement</option>
                             <option value="services">Services externes</option>
-                            <option value="autre">Autre</option>
+                            <option value="Autre">Autre</option>
                         </select>
+
+                        <!-- Input pour type personnalisé -->
+                        <div id="other_type_container" style="display:none; margin-top:10px;">
+                            <label for="new_type" class="form-label">Précisez le type :</label>
+                            <input type="text" id="new_type" name="new_type" class="form-control"
+                                placeholder="Entrez un nouveau type…">
+                        </div>
                     </div>
 
                     <!-- Description -->
                     <div class="mb-4">
                         <label for="description" class="form-label">
-                            Description
-                            <span class="required-indicator">*</span>
+                            Description <span class="required-indicator">*</span>
                         </label>
-                        <textarea id="description" name="description" class="form-control " rows="6"
+                        <textarea id="description" name="description" class="form-control" rows="6"
                             placeholder="Décrivez votre besoin en détail..." required></textarea>
                         <div class="form-text-muted">Décrivez votre besoin de manière claire et détaillée</div>
                     </div>
@@ -52,10 +82,9 @@
                     <!-- Urgence -->
                     <div class="mb-4">
                         <label for="urgence" class="form-label">
-                            Urgence
-                            <span class="required-indicator">*</span>
+                            Urgence <span class="required-indicator">*</span>
                         </label>
-                        <select id="urgence" name="urgence" class="form-control " required>
+                        <select id="urgence" name="urgence" class="form-control" required>
                             <option value="" selected>Sélectionnez le niveau d'urgence</option>
                             <option value="faible">Faible</option>
                             <option value="normale">Normale</option>
@@ -67,8 +96,7 @@
                     <!-- Date limite -->
                     <div class="mb-4">
                         <label for="date_limite" class="form-label">
-                            Date limite
-                            <span class="required-indicator">*</span>
+                            Date limite <span class="required-indicator">*</span>
                         </label>
                         <input type="date" id="date_limite" name="date_limite" class="form-control" required>
                         <div class="form-text-muted">Sélectionnez la date avant laquelle le besoin doit être satisfait
@@ -77,19 +105,15 @@
 
                     <!-- Pièces jointes -->
                     <div class="mb-4">
-                        <label for="attachments" class="form-label">
-                            Pièces jointes
-                        </label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="attachments" name="attachments" class="form-control input-beex"
-                                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" multiple>
-                        </div>
+                        <label for="attachments" class="form-label">Pièces jointes</label>
+                        <input type="file" id="attachments" name="attachments[]" class="form-control"
+                            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" multiple>
                         <div class="form-text-muted">Formats acceptés : PDF, Word, Excel, Images (JPG, PNG)</div>
                     </div>
 
-                    <!-- Form Actions -->
-                    <div class="btn-container">
-                        <button type="button" class="btn-cancel">Annuler</button>
+                    <!-- Actions -->
+                    <div class="btn-container mt-3 d-flex gap-3">
+                        <a href="dashboard.php" class="btn-cancel text-decoration-none">Annuler</a>
                         <button type="submit" class="btn-save">Soumettre la demande</button>
                     </div>
                 </form>
@@ -97,4 +121,22 @@
         </div>
     </div>
 
+    <script>
+    // Afficher l'input "Autre" seulement si sélectionné
+    document.getElementById('type_besoin').addEventListener('change', function() {
+        const otherInput = document.getElementById('other_type_container');
+        const newTypeInput = document.getElementById('new_type');
+
+        if (this.value === 'Autre') {
+            otherInput.style.display = 'block';
+            newTypeInput.required = true;
+        } else {
+            otherInput.style.display = 'none';
+            newTypeInput.required = false;
+            newTypeInput.value = "";
+        }
+    });
+    </script>
 </body>
+
+</html>

@@ -1,4 +1,4 @@
-<?php include  __DIR__ . '/../authentification/database.php';
+<?php require_once  __DIR__ . '/../authentification/database.php';
 if (session_status() === PHP_SESSION_NONE) {
         session_start();
     } 

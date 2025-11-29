@@ -1,6 +1,6 @@
 <?php
 session_start();
-include __DIR__ . '/../../../backend/demandeur_traitm/recup_par_email.php';
+require_once __DIR__ . '/../../../backend/demandeur_traitm/recup_par_email.php';
 require_once __DIR__ .  '/../../../backend/authentification/database.php';
 $db = new Database();
 $conn = $db->pdo;
@@ -12,7 +12,6 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 }
 
 $email = $_SESSION['email'] ?? null;
-var_dump($email);
 $demandeur = new Demandeur();
 $user = $demandeur->getByEmail($email);
 if (!$user) {
@@ -33,11 +32,11 @@ if (isset($_POST['save_password'])) {
               } else {
                 echo "<script>alert('Erreur lors de la modification.');</script>";}}}
 if (isset($_POST['revenir_bord'])){
-    if (isset($_POST['revenir_bord'])) {
+   
     // rediriger vers le dashboard du demandeur
     header("Location: dashboard.php");
     exit;
-}
+
 
 
 }
@@ -57,34 +56,38 @@ if (isset($_POST['revenir_bord'])){
     <?php
 include ("header_menu.php") ?>
     <div class="cote">
-        <a href="dashboard.php" class="retour_dashboard">← Retour à la page d'acceuil</a>
+        <a href="dashboard.php" class="retour_dashboard"><i class="bi bi-arrow-left"></i> Retour à la page d'acceuil</a>
         <h2>Mes informations</h2>
     </div>
     <div class="main-content">
         <div class="form-wrapper d-flex justify-content-center">
-            <div class="card shadow-sm p-4" >
+            <div class="card shadow-sm p-4">
                 <form action="" method="post">
                     <!-- Nom -->
                     <div class="mb-3">
                         <label class="form-label">Nom</label>
-                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['nom_complet_d']); ?>"   readonly>
+                        <input type="text" class="form-control"
+                            value="<?php echo htmlspecialchars($user['nom_complet_d']); ?>" readonly>
                     </div>
 
                     <!-- Email -->
                     <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" class="form-control" value="<?php echo htmlspecialchars($user['email_d']); ?>" readonly>
+                        <input type="email" class="form-control"
+                            value="<?php echo htmlspecialchars($user['email_d']); ?>" readonly>
                     </div>
 
                     <!-- Département -->
                     <div class="mb-3">
 
                         <label class="form-label">Département</label>
-                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['nom_dep']); ?>" readonly>
+                        <input type="text" class="form-control"
+                            value="<?php echo htmlspecialchars($user['nom_dep']); ?>" readonly>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Poste</label>
-                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['poste_d']); ?>" readonly>
+                        <input type="text" class="form-control"
+                            value="<?php echo htmlspecialchars($user['poste_d']); ?>" readonly>
 
 
                     </div>
@@ -92,7 +95,8 @@ include ("header_menu.php") ?>
                     <!-- Chef -->
                     <div class="mb-3">
                         <label class="form-label">Chef</label>
-                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['chef']); ?>"  readonly>
+                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['chef']); ?>"
+                            readonly>
                     </div>
 
                     <div class="my-4">
@@ -102,19 +106,21 @@ include ("header_menu.php") ?>
 
                     <div class="mb-3">
                         <label class="form-label">Nouveau mot de passe :</label>
-                        <input type="password" name="new_password" class="form-control" placeholder="Entrez un nouveau mot de passe">
+                        <input type="password" name="new_password" class="form-control"
+                            placeholder="Entrez un nouveau mot de passe">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Confirmer le mot de passe :</label>
-                        <input type="password" name="confirm_password" class="form-control" placeholder="Confirmez le mot de passe">
+                        <input type="password" name="confirm_password" class="form-control"
+                            placeholder="Confirmez le mot de passe">
                     </div>
 
                     <div class="btn-container">
 
 
                         <button type="submit" class="btn-cancel mt-3" name="revenir_bord">Annuler</button>
-                        <button type="submit" class="btn-save mt-3" name="save_password" >Enregistrer</button>
+                        <button type="submit" class="btn-save mt-3" name="save_password">Enregistrer</button>
                     </div>
                 </form>
             </div>

@@ -7,6 +7,12 @@
   --border-light: #e0e0e0;
   --shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.12);
 }
+/*contenu de retour et titre  */
+.cote{
+    margin-top:15px;
+    padding:40px;
+}
+/*boutton de retour*/
 .retour_dashboard {
     color: var(--primary-blue);
     text-decoration: none;
@@ -17,28 +23,29 @@
     transition: color 0.3s;
     font-family:Georgia, 'Times New Roman', Times, serif;
 }
-.cote{
-    margin-top:15px;
-    padding:40px;
-}
+/* titre */
 .cote h2{
+    font-size: 50px;
     text-align: center;
     font-weight: bold;
     color: var(--primary-blue);
     font-family:Georgia, 'Times New Roman', Times, serif;
 
 }
+/*contenu general de formulaire*/
 .main-content {
     margin-top: 8px;
     padding: 1px;
 }
 
-
+/*sous contenu de formulaire 
 .card{
     width: 100%;
      max-width: 700px;
+      border-radius: 10px; 
 
-}
+}*/
+/*element inchangeable info personnelles*/
 .form-text-muted{
     
     font-size: 13px;
@@ -53,11 +60,13 @@
 .file-input-wrapper {
     position: relative;
 }
+/*contenu des bouttons*/
 .btn-container{
     display: flex;
     justify-content: space-between; /* Annuler à gauche / Enregistrer à droite */
     align-items: center;
 }
+/*boutton enregistrer*/
 .btn-save {
     background: var(--primary-blue);
     color:white;
@@ -67,6 +76,7 @@
     border: none;
     font-family:Georgia, 'Times New Roman', Times, serif;
 }
+/*boutton annuler*/
 .btn-cancel{
     background: white;
     color:var(--primary-blue);
@@ -77,6 +87,7 @@
     font-family:Georgia, 'Times New Roman', Times, serif;
 
 }
+/*boutton reinitialiser*/
 .btn-reinit{
     padding: 10px 28px;
     font-weight: bold;
@@ -85,35 +96,43 @@
     font-family:Georgia, 'Times New Roman', Times, serif;
 
 }
+/*clique sur enregistrer*/
 .btn-save:hover {
     background: var(--primary-green);
 }
+/*clique sur annuler*/
 .btn-cancel:hover{
     background: var(--primary-green);
 
 }
+/*clique sur reinitialiser */
 .btn-reinit:hover{
     background: var(--primary-green);
 
 }
+/*form de input*/
 .form-control{
-      background: #f2f4f7;
+    background: #f2f4f7;
     border: 1px solid #d4d8dd;
 
 }
+/*form de input inchangeable*/
 .form-control[readonly] {
     background: #f2f4f7;
     border: 1px solid #d4d8dd;
     cursor: not-allowed;
 }
+/* titre :changer le mot de passe*/
 .my-4 h4{
     color:var(--primary-green);
     font-weight:bold;
     font-family:Georgia, 'Times New Roman', Times, serif;
 }
+/* div de  :changer le mot de passe*/
 .mb-3{
     font-family:Georgia, 'Times New Roman', Times, serif;
 }
+
 .input-beex[type="file"]::file-selector-button {
     background: var(--beex-blue);
     color: white;
@@ -125,6 +144,7 @@
     margin-right: 15px;
     transition: all 0.3s ease;
 }
+/* detail_demand:info generale de demandeur*/
 .content-inter {
     display: flex;
     margin-left:50px;
@@ -150,17 +170,24 @@
     font-weight: 400; /* valeurs de la BD NON gras */
     color: #555;
 }
+/* titre page detail_demand*/
 .card h2{
     font-weight: bold;
+    font-size: 20px;
     color: var(--primary-blue);
     font-family:Georgia, 'Times New Roman', Times, serif;
 
 }
 .main-content1 .card {
     width: 85%;                 /* augmente ou diminue comme tu veux */
-    max-width: 1300px;          /* limite pour ne pas trop étirer */
+    max-width: 900px;          /* limite pour ne pas trop étirer */
     margin-bottom: 20px;
 }
+.card-content p{
 
+      margin: 8px 0;
+    font-size: 16px;
+    
+}
 
 

@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . '/../authentification/database.php';
+require_once __DIR__  . '/../authentification/database.php';
 
 
 

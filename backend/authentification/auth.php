@@ -1,5 +1,6 @@
 <?php
-include "database.php";
+require_once __DIR__ . "/database.php";
+
 
 class Auth {
 
@@ -36,6 +37,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 "email_col" => "email_d",
                 "pass_col"  => "mdps_d",
                 "id_col"    => "id_d",
+                "id_deman"    => "id_dm",
                 "name_col"  => "nom_complet_d",
                 "dashboard" => "../../BEEX/frontend/demandeur/dashboard.php"
             ],
@@ -59,6 +61,8 @@ if (session_status() === PHP_SESSION_NONE) {
                 $_SESSION["user_id"] = $user[$role['id_col']];
                 $_SESSION["username"] = $user[$role['name_col']];
                 $_SESSION["email"] = $user[$role['email_col']]; 
+                $_SESSION["demand_id"] = $user[$role['id_deman']];
+
                  return $role["dashboard"];
                 
             }

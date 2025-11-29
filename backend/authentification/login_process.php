@@ -1,5 +1,6 @@
 <?php
-include "auth.php";
+include __DIR__ . "/auth.php";
+
 
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';

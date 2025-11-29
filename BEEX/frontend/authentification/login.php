@@ -48,7 +48,8 @@ session_start();
                         </form>
                         <?php if (isset($_GET['error'])): ?>
                         <div style="color:red; font-weight:bold;">
-                            <p style="text-align:center;"><i class="bi bi-x-circle"></i> Email ou mot de passe incorrect.</p>
+                            <p style="text-align:center;"><i class="bi bi-x-circle"></i> Email ou mot de passe
+                                incorrect.</p>
                         </div>
                         <?php endif; ?>
                     </div>
