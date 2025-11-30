@@ -103,10 +103,18 @@ include ("header_menu.php") ?>
 
             </div>
         </div>
-        <div class='main-content'>
-            <div class="form-wrapper d-flex justify-content-center">
-                <button type='submit' class='btn-save mt-3' name='modifier'>modifier</button>
-            </div>
-        </div>
+<div class='main-content'>
+    <div class="form-wrapper d-flex justify-content-center">
+        <?php if ($demande['status'] === 'en_attente'): ?>
+            <button type='submit' class='btn-save mt-3' name='modifier' >Modifier</button>
+            
+        <?php else: ?>
+            <button type='button' class='btn-save mt-3' title="Action impossible" disabled>
+                Modifier
+            </button>
+        <?php endif; ?>
+    </div>
+</div>
+
 
     </form>

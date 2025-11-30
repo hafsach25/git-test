@@ -74,6 +74,7 @@
     border: none;
     font-family:Georgia, 'Times New Roman', Times, serif;
 }
+
 /*boutton annuler*/
 .btn-cancel{
     background: white;
@@ -98,6 +99,15 @@
 .btn-save:hover {
     background: var(--primary-green);
 }
+
+/* Bouton désactivé */
+.btn-save:disabled {
+    background-color: #b5b5b5 !important;  /* gris désactivé */
+    color: #6e6e6e !important;
+    cursor:not-allowed;
+    pointer-events: none;
+}
+
 /*clique sur annuler*/
 .btn-cancel:hover{
     background: var(--primary-green);
