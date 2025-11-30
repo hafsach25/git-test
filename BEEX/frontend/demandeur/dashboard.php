@@ -89,7 +89,7 @@ require_once __DIR__ ."/../../../backend/demandeur/stat_cards_process.php";
                             <?php 
                             switch ($demande['status']) {
                                 case 'en_attente':
-                                    $badge = ' .badge-attente'; $txt = 'En attente'; break;
+                                    $badge = 'badge-attente'; $txt = 'En attente'; break;
                                 case 'en_cours':
                                     $badge = 'badge-en-cours'; $txt = 'En cours'; break;
                                 case 'validee':
