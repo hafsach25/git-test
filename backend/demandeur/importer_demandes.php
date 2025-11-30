@@ -1,5 +1,7 @@
 <?php
-
+if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }   
 require_once __DIR__  . '/../authentification/database.php';
 
 
@@ -24,7 +26,7 @@ class DemandeImporter
         $sql = "
             SELECT 
                 d.id_dm,
-                t.nom_tb AS type_besoin,
+                d.typedebesoin AS type_besoin,
                 d.date_creation_dm,
                 d.status,
                 s.nom_service,
@@ -33,10 +35,9 @@ class DemandeImporter
                 d.urgence_dm,
                 d.transfere
             FROM demande d
-            JOIN type_besoin t ON d.id_typedebesoin = t.id_tb
             JOIN service s ON d.id_service = s.id_service
             WHERE d.id_demandeur = :id_demandeur
-            ORDER BY d.date_creation_dm DESC
+            ORDER BY d.id_dm DESC
         ";
 
         $stmt = $this->pdo->prepare($sql);
@@ -45,13 +46,6 @@ class DemandeImporter
     }
 }
 
-/* usage */
-$db = new Database();
 
-$importer = new DemandeImporter($db, $_SESSION);
-$results = $importer->fetchDemandesForCurrentUser();
-
-// Sauvegarde des résultats dans la session
-$_SESSION['imported_demandes'] = $results;
 
 

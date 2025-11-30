@@ -5,7 +5,9 @@ require_once __DIR__ . '/../../../backend/demandeur_traitm/change_modifi.php';
 
 $db = new Database();
 $connexion = $db->pdo;
-
+require_once __DIR__ . "/../../../backend/demandeur/importer_type_besoins.php";
+$typeBesoin = new TypeBesoin();
+$types_besoin = $typeBesoin->getTypesBesoin();
 // Vérifier connexion
 if (!isset($_SESSION['logged_in'])) {
     header("Location: ../../BEEX/frontend/authentification/login.php");
@@ -25,7 +27,7 @@ if (!$demande) {
 }
 
 // Pré-remplissage
-$type_besoin = $demande['type_besoin'] ?? '';
+$type_besoin_actuel = $demande['type_besoin'] ?? '';
 $description = $demande['description'] ?? '';
 $urgence = $demande['urgence'] ?? '';
 $date_limite = $demande['date_limite'] ?? '';
@@ -96,13 +98,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="mb-4">
                         <label for="type_besoin" class="form-label">Type de besoin <span
                                 class="required-indicator">*</span></label>
-                        <select id="type_besoin" name="type_besoin" class="form-control" required>
-                            <option value="">Sélectionnez un type</option>
-                            <option value="1" <?= $type_besoin == 1 ? 'selected' : '' ?>>Achat Matériel Info</option>
-                            <option value="2" <?= $type_besoin == 2 ? 'selected' : '' ?>>Licence Logiciel</option>
-                            <option value="3" <?= $type_besoin == 3 ? 'selected' : '' ?>>Accès VPN</option>
-                            <option value="4" <?= $type_besoin == 4 ? 'selected' : '' ?>>Régularisation Salaire</option>
-                        </select>
+                       <select class="form-select filter-select" id="type_besoin" name="type_besoin" required>
+    <option value="">Sélectionner un type</option>
+    <?php foreach ($types_besoin as $type): ?>
+        <option value="<?= htmlspecialchars($type['nom_tb'], ENT_QUOTES) ?>"
+            <?= ($type['nom_tb'] === $type_besoin_actuel) ? 'selected' : '' ?>>
+            <?= htmlspecialchars($type['nom_tb']) ?>
+        </option>
+    <?php endforeach; ?>
+</select>
                     </div>
 
                     <!-- Description -->

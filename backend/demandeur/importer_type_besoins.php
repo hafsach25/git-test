@@ -12,10 +12,10 @@ class TypeBesoin {
 
     
     public function getTypesBesoin() {
-        $sql = "SELECT DISTINCT nom_tb FROM type_besoin ORDER BY nom_tb ASC";
+        $sql = "SELECT id_tb, nom_tb from type_besoin";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

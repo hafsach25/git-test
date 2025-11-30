@@ -15,7 +15,7 @@ class changDeman{
 
 if ($result) {
     return [
-        'type_besoin' => $result['id_typedebesoin'], // récupère l'id du type
+        'type_besoin' => $result['typedebesoin'], // récupère l'id du type
         'description' => $result['description_dm'],
         'urgence' => $result['urgence_dm'],
         'date_limite' => $result['date_limite_dm'],
