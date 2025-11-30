@@ -124,10 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         class="required-indicator">*</span></label>
                                 <select id="urgence" name="urgence" class="form-control" required>
                                     <option value="">Sélectionnez le niveau d'urgence</option>
-                                    <option value="Faible" <?= $urgence == 'Faible' ? 'selected' : '' ?>>Faible</option>
-                                    <option value="Normale" <?= $urgence == 'Normale' ? 'selected' : '' ?>>Normale
+                                    <option value="faible" <?= $urgence == 'faible' ? 'selected' : '' ?>>Faible</option>
+                                    <option value="normale" <?= $urgence == 'normale' ? 'selected' : '' ?>>Normale
                                     </option>
-                                    <option value="Haute" <?= $urgence == 'Haute' ? 'selected' : '' ?>>Haute</option>
+                                    <option value="haute" <?= $urgence == 'haute' ? 'selected' : '' ?>>Haute</option>
                                     <option value="critique" <?= $urgence == 'critique' ? 'selected' : '' ?>>Critique
                                     </option>
                                 </select>
