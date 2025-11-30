@@ -59,9 +59,11 @@ include ("header_menu.php") ?>
         <a href="dashboard.php" class="retour_dashboard"><i class="bi bi-arrow-left"></i> Retour à la page d'acceuil</a>
         <h2>Mes informations</h2>
     </div>
-    <div class="main-content">
-        <div class="form-wrapper d-flex justify-content-center">
-            <div class="card shadow-sm p-4">
+      <div class="main-content">
+        <div class="container my-2">
+                <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="card shadow-sm p-4">
                 <form action="" method="post">
                     <!-- Nom -->
                     <div class="mb-3">

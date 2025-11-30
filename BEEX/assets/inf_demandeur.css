@@ -38,13 +38,11 @@
     padding: 1px;
 }
 
-/*sous contenu de formulaire 
-.card{
-    width: 100%;
-     max-width: 700px;
-      border-radius: 10px; 
+ 
+.card{max-width: 900px; width: 100%;
 
-}*/
+
+}
 /*element inchangeable info personnelles*/
 .form-text-muted{
     

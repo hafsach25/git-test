@@ -87,8 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="main-content">
-        <div class="form-wrapper d-flex justify-content-center">
-            <div class="card shadow-sm p-4">
+        <div class="container my-2">
+                <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="card shadow-sm p-4">
                 <form method="post" action="" enctype="multipart/form-data">
                     <!-- Type de besoin -->
                     <div class="mb-4">
