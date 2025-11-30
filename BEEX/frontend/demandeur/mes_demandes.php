@@ -30,12 +30,13 @@ $types_besoin = $typeBesoin->getTypesBesoin();
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label class="form-label fw-bold">Type de besoin</label>
-                    <select class="form-select filter-select" id="filterType">
-                        <option value="">Tous les types</option>
+                   <select class="form-select filter-select" id="filterType" name="type_besoin" required>
+                        <option value="">Séléctionner un type</option>
                         <?php foreach ($types_besoin as $type): ?>
-                        <option value="<?= htmlspecialchars($type) ?>"><?= htmlspecialchars($type) ?></option>
+                        <option value="<?= htmlspecialchars($type['nom_tb']) ?>"><?= htmlspecialchars($type['nom_tb']) ?></option>
                         <?php endforeach; ?>
                     </select>
+
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label fw-bold">Statut</label>
@@ -124,6 +125,7 @@ $types_besoin = $typeBesoin->getTypesBesoin();
 
     // Convertir les données PHP en objet JavaScript
     let demandes = <?= json_encode($demandes) ?>;
+    console.log(demandes);
 
     // Copie des demandes qui sera filtrée
     let filteredDemandes = demandes;
