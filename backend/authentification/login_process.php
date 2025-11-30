@@ -2,8 +2,10 @@
 include __DIR__ . "/auth.php";
 
 
-$email = $_POST['email'] ?? '';
+$email = strtolower(trim($_POST['email'] ?? ''));
 $password = $_POST['password'] ?? '';
+//var_dump($_POST);
+//exit;
 
 $auth = new Auth();
 $redirect = $auth->login($email, $password);
@@ -17,3 +19,4 @@ if ($redirect) {
     exit;
 }
 ?>
+

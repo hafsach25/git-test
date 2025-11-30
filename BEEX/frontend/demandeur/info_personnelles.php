@@ -25,8 +25,9 @@ if (isset($_POST['save_password'])) {
         if ($new_password !== $confirm_password) {
            echo "<script>alert('Les mots de passe ne correspondent pas !');</script>";
         } else {
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
             $query = $conn->prepare("UPDATE demandeur SET mdps_d= ? WHERE id_d= ?");
-            $success = $query->execute([$new_password, $id_user]);
+            $success = $query->execute([$hashed_password, $id_user]);
             if ($success) {
               echo "<script>alert('Mot de passe modifié avec succès !');</script>";
               } else {
@@ -59,73 +60,109 @@ include ("header_menu.php") ?>
         <a href="dashboard.php" class="retour_dashboard"><i class="bi bi-arrow-left"></i> Retour à la page d'acceuil</a>
         <h2>Mes informations</h2>
     </div>
-      <div class="main-content">
+    <div class="main-content">
         <div class="container my-2">
-                <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
-                <div class="card shadow-sm p-4">
-                <form action="" method="post">
-                    <!-- Nom -->
-                    <div class="mb-3">
-                        <label class="form-label">Nom</label>
-                        <input type="text" class="form-control"
-                            value="<?php echo htmlspecialchars($user['nom_complet_d']); ?>" readonly>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <div class="card shadow-sm p-4">
+                        <form action="" method="post">
+                            <!-- Nom -->
+                            <div class="mb-3">
+                                <label class="form-label">Nom</label>
+                                <input type="text" class="form-control"
+                                    value="<?php echo htmlspecialchars($user['nom_complet_d']); ?>" readonly>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control"
+                                    value="<?php echo htmlspecialchars($user['email_d']); ?>" readonly>
+                            </div>
+
+                            <!-- Département -->
+                            <div class="mb-3">
+
+                                <label class="form-label">Département</label>
+                                <input type="text" class="form-control"
+                                    value="<?php echo htmlspecialchars($user['nom_dep']); ?>" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Poste</label>
+                                <input type="text" class="form-control"
+                                    value="<?php echo htmlspecialchars($user['poste_d']); ?>" readonly>
+
+
+                            </div>
+
+                            <!-- Chef -->
+                            <div class="mb-3">
+                                <label class="form-label">Chef</label>
+                                <input type="text" class="form-control"
+                                    value="<?php echo htmlspecialchars($user['chef']); ?>" readonly>
+                            </div>
+
+                            <div class="my-4">
+
+                                <h4>Changer le mot de passe</h4>
+                            </div>
+
+                            <div class="mb-3 position-relative">
+                                <label class="form-label">Nouveau mot de passe :</label>
+                                <input type="password" id="new_password" name="new_password" class="form-control"
+                                    placeholder="Entrez un nouveau mot de passe">
+
+                                <i class="bi bi-eye-slash" id="toggleNew"
+                                    style="position:absolute; right:10px; top:38px; cursor:pointer; font-size:20px"></i>
+                            </div>
+
+                            <div class="mb-3 position-relative">
+                                <label class="form-label">Confirmer le mot de passe :</label>
+                                <input type="password" id="confirm_password" name="confirm_password"
+                                    class="form-control" placeholder="Confirmez le mot de passe">
+
+                                <i class="bi bi-eye-slash" id="toggleConfirm"
+                                    style="position:absolute; right:10px; top:38px; cursor:pointer; font-size:20px"></i>
+                            </div>
+
+
+                            <div class="btn-container">
+
+
+                                <button type="submit" class="btn-cancel mt-3" name="revenir_bord">Annuler</button>
+                                <button type="submit" class="btn-save mt-3" name="save_password">Enregistrer</button>
+                            </div>
+                        </form>
                     </div>
-
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control"
-                            value="<?php echo htmlspecialchars($user['email_d']); ?>" readonly>
-                    </div>
-
-                    <!-- Département -->
-                    <div class="mb-3">
-
-                        <label class="form-label">Département</label>
-                        <input type="text" class="form-control"
-                            value="<?php echo htmlspecialchars($user['nom_dep']); ?>" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Poste</label>
-                        <input type="text" class="form-control"
-                            value="<?php echo htmlspecialchars($user['poste_d']); ?>" readonly>
-
-
-                    </div>
-
-                    <!-- Chef -->
-                    <div class="mb-3">
-                        <label class="form-label">Chef</label>
-                        <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['chef']); ?>"
-                            readonly>
-                    </div>
-
-                    <div class="my-4">
-
-                        <h4>Changer le mot de passe</h4>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Nouveau mot de passe :</label>
-                        <input type="password" name="new_password" class="form-control"
-                            placeholder="Entrez un nouveau mot de passe">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Confirmer le mot de passe :</label>
-                        <input type="password" name="confirm_password" class="form-control"
-                            placeholder="Confirmez le mot de passe">
-                    </div>
-
-                    <div class="btn-container">
-
-
-                        <button type="submit" class="btn-cancel mt-3" name="revenir_bord">Annuler</button>
-                        <button type="submit" class="btn-save mt-3" name="save_password">Enregistrer</button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
+            <script>
+            function togglePassword(inputId, iconId) {
+                const input = document.getElementById(inputId);
+                const icon = document.getElementById(iconId);
+
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove("bi-eye-slash");
+                    icon.classList.add("bi-eye");
+                } else {
+                    input.type = "password";
+                    icon.classList.remove("bi-eye");
+                    icon.classList.add("bi-eye-slash");
+                }
+            }
+            // Quand on clique sur l'icône toggleNew (œil du premier champ)
+
+            document.getElementById("toggleNew").addEventListener("click", function() {
+                    // On appelle la fonction togglePassword pour :
+                    // - le champ new_password
+                    // - l'icône toggleNew
+                togglePassword("new_password", "toggleNew");
+
+            });
+            document.getElementById("toggleConfirm").addEventListener("click", function() {
+                togglePassword("confirm_password", "toggleConfirm");
+            });
+            </script>
+
 </body>
