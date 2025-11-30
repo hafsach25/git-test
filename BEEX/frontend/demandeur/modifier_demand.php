@@ -90,73 +90,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="main-content">
         <div class="container my-2">
-                <div class="row justify-content-center">
-            <div class="col-12 col-md-10 col-lg-8">
-                <div class="card shadow-sm p-4">
-                <form method="post" action="" enctype="multipart/form-data">
-                    <!-- Type de besoin -->
-                    <div class="mb-4">
-                        <label for="type_besoin" class="form-label">Type de besoin <span
-                                class="required-indicator">*</span></label>
-                       <select class="form-select filter-select" id="type_besoin" name="type_besoin" required>
-    <option value="">Sélectionner un type</option>
-    <?php foreach ($types_besoin as $type): ?>
-        <option value="<?= htmlspecialchars($type['nom_tb'], ENT_QUOTES) ?>"
-            <?= ($type['nom_tb'] === $type_besoin_actuel) ? 'selected' : '' ?>>
-            <?= htmlspecialchars($type['nom_tb']) ?>
-        </option>
-    <?php endforeach; ?>
-</select>
-                    </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <div class="card shadow-sm p-4">
+                        <form method="post" action="" enctype="multipart/form-data">
+                            <!-- Type de besoin -->
+                            <div class="mb-4">
+                                <label for="type_besoin" class="form-label">Type de besoin <span
+                                        class="required-indicator">*</span></label>
+                                <select class="form-select filter-select" id="type_besoin" name="type_besoin" required>
+                                    <option value="">Sélectionner un type</option>
+                                    <?php foreach ($types_besoin as $type): ?>
+                                    <option value="<?= htmlspecialchars($type['nom_tb'], ENT_QUOTES) ?>"
+                                        <?= ($type['nom_tb'] === $type_besoin_actuel) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($type['nom_tb']) ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
 
-                    <!-- Description -->
-                    <div class="mb-4">
-                        <label for="description" class="form-label">Description <span
-                                class="required-indicator">*</span></label>
-                        <textarea id="description" name="description" class="form-control" rows="6"
-                            required><?= htmlspecialchars($description) ?></textarea>
-                        <div class="form-text-muted">Décrivez votre besoin de manière claire et détaillée</div>
-                    </div>
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Description <span
+                                        class="required-indicator">*</span></label>
+                                <textarea id="description" name="description" class="form-control" rows="6"
+                                    required><?= htmlspecialchars($description) ?></textarea>
+                                <div class="form-text-muted">Décrivez votre besoin de manière claire et détaillée</div>
+                            </div>
 
-                    <!-- Urgence -->
-                    <div class="mb-4">
-                        <label for="urgence" class="form-label">Urgence <span
-                                class="required-indicator">*</span></label>
-                        <select id="urgence" name="urgence" class="form-control" required>
-                            <option value="">Sélectionnez le niveau d'urgence</option>
-                            <option value="Faible" <?= $urgence == 'Faible' ? 'selected' : '' ?>>Faible</option>
-                            <option value="Normale" <?= $urgence == 'Normale' ? 'selected' : '' ?>>Normale</option>
-                            <option value="Haute" <?= $urgence == 'Haute' ? 'selected' : '' ?>>Haute</option>
-                            <option value="critique" <?= $urgence == 'critique' ? 'selected' : '' ?>>Critique</option>
-                        </select>
-                    </div>
+                            <!-- Urgence -->
+                            <div class="mb-4">
+                                <label for="urgence" class="form-label">Urgence <span
+                                        class="required-indicator">*</span></label>
+                                <select id="urgence" name="urgence" class="form-control" required>
+                                    <option value="">Sélectionnez le niveau d'urgence</option>
+                                    <option value="Faible" <?= $urgence == 'Faible' ? 'selected' : '' ?>>Faible</option>
+                                    <option value="Normale" <?= $urgence == 'Normale' ? 'selected' : '' ?>>Normale
+                                    </option>
+                                    <option value="Haute" <?= $urgence == 'Haute' ? 'selected' : '' ?>>Haute</option>
+                                    <option value="critique" <?= $urgence == 'critique' ? 'selected' : '' ?>>Critique
+                                    </option>
+                                </select>
+                            </div>
 
-                    <!-- Date limite -->
-                    <div class="mb-4">
-                        <label for="date_limite" class="form-label">Date limite <span
-                                class="required-indicator">*</span></label>
-                        <input type="date" id="date_limite" name="date_limite" class="form-control"
-                            value="<?= $date_limite ?>" required>
-                    </div>
+                            <!-- Date limite -->
+                            <div class="mb-4">
+                                <label for="date_limite" class="form-label">Date limite <span
+                                        class="required-indicator">*</span></label>
+                                <input type="date" id="date_limite" name="date_limite" class="form-control"
+                                    value="<?= $date_limite ?>" required>
+                            </div>
 
-                    <!-- Pièces jointes -->
-                    <?php if ($attachments) : ?>
-                    <p>Fichier existant : <a href="../../uploads/<?= $attachments ?>"
-                            target="_blank"><?= $attachments ?></a></p>
-                    <?php endif; ?>
-                    <input type="file" id="attachments" name="attachments[]" class="form-control" multiple>
+                            <!-- Pièces jointes -->
+                            <?php if ($attachments) : ?>
+                            <p>Fichier existant : <a href="../../uploads/<?= $attachments ?>"
+                                    target="_blank"><?= $attachments ?></a></p>
+                            <?php endif; ?>
+                            <input type="file" id="attachments" name="attachments[]" class="form-control" multiple>
 
-                    <!-- Boutons -->
-                    <div class="btn-container mt-3 d-flex gap-3">
-                        <button type="reset" class="btn-reinit">Réinitialiser</button>
-                        <a href="<?= htmlspecialchars($previousPage) ?>"
-                            class="btn-cancel text-decoration-none">Annuler</a>
-                        <button type="submit" class="btn-save">Enregistrer les modifications</button>
+                            <!-- Boutons -->
+                            <div class="btn-container mt-3 d-flex gap-3">
+                                <button type="reset" class="btn-reinit">Réinitialiser</button>
+                                <a href="<?= htmlspecialchars($previousPage) ?>"
+                                    class="btn-cancel text-decoration-none">Annuler</a>
+                                <button type="submit" class="btn-save">Enregistrer les modifications</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
 </body>
 
 </html>
