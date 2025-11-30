@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+include __DIR__ . "/../../../backend/demandeur/importer_demandes.php";
+require_once __DIR__ ."/../../../backend/demandeur/importer_demandes.php"; 
+$importer = new DemandeImporter(new Database(), $_SESSION);
+$demandes = $importer->fetchDemandesForCurrentUser();
 if (isset($_SESSION['success_message'])) {
     echo '<div class="alert alert-success">'.$_SESSION['success_message'].'</div>';
     unset($_SESSION['success_message']); // supprimer après affichage
@@ -50,8 +53,7 @@ require_once __DIR__ ."/../../../backend/demandeur/stat_cards_process.php";
         </div>
 
         <?php 
-    // TABLEAU DES DEMANDES
-    $demandes = $_SESSION['imported_demandes'] ?? [];
+   
 
     if (empty($demandes)): ?>
         <p>Aucune demande trouvée.</p>

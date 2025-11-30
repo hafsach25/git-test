@@ -1,7 +1,9 @@
 <?php 
 session_start();
 require_once __DIR__ ."/../../../backend/demandeur/importer_demandes.php"; 
-$demandes = $_SESSION['imported_demandes'] ?? [];
+$importer = new DemandeImporter(new Database(), $_SESSION);
+$demandes = $importer->fetchDemandesForCurrentUser();
+
 require_once __DIR__ . "/../../../backend/demandeur/importer_type_besoins.php";
 $typeBesoin = new TypeBesoin();
 $types_besoin = $typeBesoin->getTypesBesoin();

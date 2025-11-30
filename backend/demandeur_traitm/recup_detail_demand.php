@@ -18,11 +18,10 @@ public function getDemandeById($id_dm) {
                 d.status,
                 d.description_dm,
                 d.piece_jointe_dm AS fichier,
-                tb.nom_tb AS type_besoin,
+                d.typedebesoin AS type_besoin,
                 dem.nom_complet_d AS demandeur,
                 dep.nom_dep AS departement
             FROM demande d
-            LEFT JOIN type_besoin tb ON d.id_typedebesoin = tb.id_tb
             LEFT JOIN demandeur dem ON d.id_demandeur = dem.id_d
             LEFT JOIN departement dep ON dem.id_dep = dep.id_dep
             WHERE d.id_dm = :id_dm

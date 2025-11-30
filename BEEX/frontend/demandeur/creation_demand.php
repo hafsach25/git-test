@@ -8,6 +8,10 @@ if (!isset($_SESSION['logged_in'])) {
 }
 
 $id_demandeur = $_SESSION['user_id'] ?? null;
+require_once __DIR__ . "/../../../backend/demandeur/importer_type_besoins.php";
+$typeBesoin = new TypeBesoin();
+$types_besoin = $typeBesoin->getTypesBesoin();
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $demand_obj = new AddDemande();
@@ -54,23 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="type_besoin" class="form-label">
                             Type de besoin <span class="required-indicator">*</span>
                         </label>
-                        <select id="type_besoin" name="type_besoin" class="form-control" required>
-                            <option value="" selected>Sélectionnez un type</option>
-                            <option value="infrastructure">Infrastructure IT</option>
-                            <option value="logiciels">Logiciels</option>
-                            <option value="formation">Formation</option>
-                            <option value="equipement">Équipement</option>
-                            <option value="services">Services externes</option>
-                            <option value="Autre">Autre</option>
-                        </select>
+                    <select class="form-select filter-select" id="type_besoin" name="type_besoin" required>
+                        <option value="">Séléctionner un type</option>
+                        <?php foreach ($types_besoin as $type): ?>
+                        <option value="<?= htmlspecialchars($type['nom_tb']) ?>"><?= htmlspecialchars($type['nom_tb']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
 
-                        <!-- Input pour type personnalisé -->
-                        <div id="other_type_container" style="display:none; margin-top:10px;">
-                            <label for="new_type" class="form-label">Précisez le type :</label>
-                            <input type="text" id="new_type" name="new_type" class="form-control"
-                                placeholder="Entrez un nouveau type…">
-                        </div>
-                    </div>
+                      
 
                     <!-- Description -->
                     <div class="mb-4">
@@ -117,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Actions -->
                     <div class="btn-container mt-3 d-flex gap-3">
                         <a href="dashboard.php" class="btn-cancel text-decoration-none">Annuler</a>
-                        <button type="submit" class="btn-save">Soumettre la demande</button>
+                        <button type="submit" class="btn-save" >Soumettre la demande</button>
                     </div>
                 </form>
             </div>
@@ -139,6 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             newTypeInput.value = "";
         }
     });
+    
     </script>
 </body>
 
