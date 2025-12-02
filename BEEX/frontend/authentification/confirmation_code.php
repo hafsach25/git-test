@@ -1,5 +1,20 @@
 <?php
 session_start();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $inputCode = $_POST['confirmation_code'];
+    
+
+    if (!isset($_SESSION['reset_code'])) {
+        $error = "Aucun code généré. Veuillez recommencer.";
+    } elseif ($inputCode == $_SESSION['reset_code']) {
+        // Code correct → rediriger vers la page de changement de mot de passe
+        header("Location: changer_mdps.php");
+        exit;
+    } else {
+        $error = "Code incorrect !";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -41,16 +56,20 @@ session_start();
                         <form class="login-form" action="" method="POST">
                             <div class="form-group">
                                 <label for="confirmation_code">Code de confirmation</label>
-                                <input type="text" pattern="\d{6}" id="confirmation_code" class="form-input "
+                                <input type="text" pattern="\d{6}" name="confirmation_code" id="confirmation_code" class="form-input "
                                     placeholder="Entrez le code de confirmation" required>
                             </div>
-                            <button type="submit" class="submit-btn"><a href="changer_mdps.php">Vérifier le
-                                    code</a></button>
+                            <button type="submit" class="submit-btn">Vérifier le
+                                    code</button>
 
                             <div class="text-center ">
                                 <a href="login.php" class="forgot-password-link">Retour à la page de connexion</a>
                             </div>
-
+                            <?php if (isset($error)): ?>
+                            <div style="color:red; font-weight:bold; margin-top:10px;">
+                                <p style="text-align:center;"><i class="bi bi-x-circle"></i> <?php echo $error; ?></p>      
+                            </div>
+                            <?php endif; ?>
                         </form>
                     </div>
                 </div>

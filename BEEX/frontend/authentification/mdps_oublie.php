@@ -1,5 +1,26 @@
 <?php
 session_start();
+include_once '../../../backend/recuperation mdps/ResetPassword.php';
+
+$type = $_GET['type'] ?? null;
+if (!$type || !in_array($type, ['demandeur','validateur','administrateur'])) {
+    die("Type d'utilisateur invalide");
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $reset = new ResetPassword();
+    $result = $reset->sendResetCode($email, $type);
+
+    if ($result['status'] === 'success') {
+        $_SESSION['reset_email'] = $email;
+        $_SESSION['reset_type'] = $type;
+        header("Location: confirmation_code.php");
+        exit;
+    } else {
+        $error = $result['message'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -40,20 +61,26 @@ session_start();
                             Entrez votre email pour recevoir un lien de réinitialisation
                         </p>
 
-                        <form class="login-form" actiont="" method="POST">
+                        <form class="login-form" action="" method="POST">
                             <div class="form-group">
                                 <label for="email">Email:</label>
                                 <input type="text" id="email" name="email" class="form-input" required
                                     placeholder="Entrez votre email">
                             </div>
 
-                            <button type="submit" class="submit-btn"><a href="confirmation_code.php">Envoyer le
-                                    lien</a></button>
+                            <button type="submit" class="submit-btn">Envoyer le code</button>
 
-                            <div class="text-center ">
+                            <div class="text-center">
                                 <a href="login.php" class="forgot-password-link">Retour à la page de connexion</a>
                             </div>
+
+                            <?php if (isset($error)): ?>
+                            <div style="color:red; font-weight:bold;">
+                                <p style="text-align:center;"><i class="bi bi-x-circle"></i> <?php echo $error; ?></p>
+                            </div>
+                            <?php endif; ?>
                         </form>
+
                     </div>
                 </div>
             </div>

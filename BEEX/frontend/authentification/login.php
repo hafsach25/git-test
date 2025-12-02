@@ -54,7 +54,7 @@ session_start();
 
 
                             <button type="submit" class="submit-btn">Se connecter</button>
-                            <a href="mdps_oublie.php" class="forgot-password-link">Mot de passe oublié?</a>
+                            <a href="etes-vous.php" class="forgot-password-link">Mot de passe oublié?</a>
                         </form>
                         <?php if (isset($_GET['error'])): ?>
                         <div style="color:red; font-weight:bold;">
