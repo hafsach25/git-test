@@ -1,0 +1,115 @@
+:root{
+    --beex-blue: #0049F9;
+    --beex-green: #01BD96;
+    --beex-red: #FF4757;
+    --beex-bg: #FBFCF9;
+    --beex-dark: black;
+}
+
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:var(--beex-bg);
+    margin:0; padding:0;
+}
+
+.header{
+    background: linear-gradient(145deg, var(--beex-blue), var(--beex-green));
+    color:white;
+    padding:16px 32px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.header-left{display:flex; align-items:center; gap:12px;}
+.header-left img{width:50px;}
+.menu-btn {
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 16px;
+    background: none;
+    border: none;
+    color: var(--beex-dark);
+}
+.user-avatar{
+    width:40px;height:40px;border-radius:50%;
+    background:linear-gradient(145deg,var(--beex-blue),var(--beex-green));
+    color:white; display:flex;align-items:center;justify-content:center;
+    font-weight:bold;
+}
+.main-content{padding:40px;}
+.page-title{font-size:28px; font-weight:700; color:var(--beex-blue); margin-bottom:10px;}
+.page-subtitle{color:#555; margin-bottom:30px;}
+
+/* STAT CARDS */
+.stats-container{display:flex; gap:20px; margin-bottom:30px;}
+.stat-card{
+    background:white; 
+    padding:20px; 
+    border-radius:12px; /* Même corner radius partout */
+    flex:1; 
+    box-shadow:0 6px 15px rgba(0,0,0,0.1);
+    position:relative;
+}
+.stat-card-top{
+    position:absolute;
+    top:0; left:0;
+    height:6px;
+    width:100%;
+    border-top-left-radius:12px;
+    border-top-right-radius:12px;
+}
+.stat-card.blue .stat-card-top { background: var(--beex-blue); }
+.stat-card.green .stat-card-top { background: var(--beex-green); }
+.stat-card.red .stat-card-top { background: var(--beex-red); }
+
+.stat-title{font-size:14px; font-weight:600; color:#444;}
+.stat-value{font-size:28px; font-weight:700; margin-top:5px;}
+.stat-card.blue .stat-value { color: var(--beex-blue); }
+.stat-card.green .stat-value { color: var(--beex-green); }
+.stat-card.red .stat-value { color: var(--beex-red); }
+
+/* TABLE */
+.table-section{
+    background:white; 
+    padding:20px; 
+    border-radius:12px; /* Même corner radius */
+    box-shadow:0 6px 15px rgba(0,0,0,0.1); 
+    margin-bottom:30px;
+}
+.badge-status{padding:5px 10px; border-radius:20px; font-weight:bold;}
+.badge-en-attente{background:rgba(0,73,249,0.15); color:var(--beex-blue);}
+.badge-urgence{background:rgba(255,71,87,0.15); color:var(--beex-red);}
+.badge-validee{background:rgba(1,189,150,0.15); color:var(--beex-green);}
+.action-btn{padding:5px 10px; border:none; border-radius:8px; color:white; font-weight:bold; margin-right:4px;}
+.btn-accept{background:var(--beex-green);}
+.btn-reject{background:var(--beex-red);}
+
+.btn-detail{background:#555;}
+.voir-btn{
+    text-align:center;
+    color:#0049F9;
+}
+.voir_but{
+    text-align:center;
+    color:#0049F9;
+    background:none;
+    border:none;
+
+}
+
+/* TOP 10 DEMANDEURS BARPLOT */
+#top-demanders{
+    background:white; 
+    padding:20px; 
+    border-radius:12px; /* Même corner radius */
+    box-shadow:0 6px 15px rgba(0,0,0,0.1);
+}
+.bar-container{display:flex; align-items:center; margin-bottom:8px;}
+.bar-label{width:120px; font-weight:600;}
+.bar{
+    height:20px; 
+    border-radius:12px; /* Même corner radius que les cards */
+    background:linear-gradient(90deg,var(--beex-blue),var(--beex-green)); 
+    margin-right:10px;
+}
+.bar-value{font-weight:600;}
