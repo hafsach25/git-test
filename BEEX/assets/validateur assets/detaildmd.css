@@ -243,3 +243,10 @@
     background-color: rgba(244, 67, 54, 0.15);
     color: #F44336 !important;
 }
+
+.disabled-tooltip {
+    cursor: not-allowed !important;
+    position: relative;
+}
+
+

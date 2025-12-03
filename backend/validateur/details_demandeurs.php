@@ -23,16 +23,14 @@ class Demandeur {
     public function getDemandes($id_demandeur) {
         $sql = "SELECT 
                     dm.id_dm,
-                    dm.typedebesoin,
+                    dm.typedebesoin as type_besoin,
                     dm.status,
                     dm.date_creation_dm,
                     dm.date_limite_dm,
                     dm.urgence_dm,
                     dm.description_dm,
-                    s.nom_service,
                     dm.piece_jointe_dm
                 FROM demande dm
-                LEFT JOIN service s ON dm.id_service = s.id_service
                 WHERE dm.id_demandeur = :id
                 ORDER BY dm.date_creation_dm DESC";
         $stmt = $this->pdo->prepare($sql);

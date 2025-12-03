@@ -52,7 +52,7 @@ class DashboardStats
                 d.status AS statut
             FROM demande d
             INNER JOIN demandeur u ON d.id_demandeur = u.id_d
-            INNER JOIN transfer t ON t.id_validateur_createur=u.id_validateur
+            Left JOIN transfer t ON t.id_validateur_createur=u.id_validateur
             LEFT JOIN validateur v ON t.id_validateur_recepteur = v.id_v
             
             WHERE u.id_validateur = :idv
@@ -65,6 +65,33 @@ class DashboardStats
         $stmt->execute(['idv' => $idValidateur]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getDemandesTransfereAuValidateurCourant(int $idValidateur): array
+    {
+        $sql = "
+            SELECT 
+                d.id_dm,
+                d.transfere,
+                v.nom_complet_v AS recepteur_name,
+                ve.nom_complet_v AS valideur_envoyeur_name,
+                u.nom_complet_d AS demandeur_name,
+                d.typedebesoin AS type_besoin,
+                d.urgence_dm AS urgence,
+                d.date_creation_dm,
+                d.status AS statut
+            FROM demande d
+            INNER JOIN demandeur u ON d.id_demandeur = u.id_d
+            INNER JOIN transfer t ON t.id_validateur_createur=u.id_validateur
+            LEFT JOIN validateur v ON t.id_validateur_recepteur = v.id_v
+            LEFT JOIN validateur ve ON t.id_validateur_createur = ve.id_v
+            WHERE t.id_validateur_recepteur = :idv and d.transfere = 1
+            ORDER BY d.date_creation_dm DESC
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['idv' => $idValidateur]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 
     /**
      * 3️⃣ Top 10 demandeurs
@@ -161,3 +188,5 @@ class DashboardStats
     }
 
 }
+
+?>  

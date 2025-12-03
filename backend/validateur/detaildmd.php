@@ -17,6 +17,7 @@ class DetailDmd {
                 d.urgence_dm,
                 d.id_demandeur,
                 d.date_creation_dm,
+                d.transfere,
                 d.status,
                 d.description_dm,
                 d.piece_jointe_dm AS fichier,

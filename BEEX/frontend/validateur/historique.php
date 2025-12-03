@@ -7,6 +7,10 @@ $demandes = $historiqueValidateur->getHistoriqueDemandes($idValidateur);
 include __DIR__ . "/../../../backend/demandeur/importer_type_besoins.php";
 $typesBesoinObj = new TypeBesoin();
 $types_besoin = $typesBesoinObj->getTypesBesoin();
+include __DIR__."/../../../backend/validateur/dashboard.php";
+$dsh=new DashboardStats();
+$demandesTransferees=$dsh-> getDemandesTransfereAuValidateurCourant($idValidateur);
+
 
 ?>
 <!DOCTYPE html>
@@ -102,6 +106,103 @@ $types_besoin = $typesBesoinObj->getTypesBesoin();
                 </nav>
             </div>
         <?php endif; ?>
+        <?php if (!empty($demandesTransferees)): ?>
+        <!-- DEMANDES TRANSFÉRÉES AU VALIDATEUR COURANT --> 
+        <div class="table-section" style="margin-top: 30px">
+            <h3>Demandes transférées au validateur</h3>
+            <table class="table-beex">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Demandeur</th>
+                        <th>Envoyé par</th>
+                        <th>Urgence</th>
+                        <th>Date de création</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($demandesTransferees as $demande): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($demande['id_dm']) ?></td>
+                        <td><?= htmlspecialchars($demande['demandeur_name']) ?></td>
+                        <td><?= htmlspecialchars($demande['valideur_envoyeur_name']) ?></td>
+                        <td>
+                            <?php 
+        switch ($demande['urgence']) {
+            case 'faible':
+                $badge = 'badge-faible';
+                $txt = 'Faible';
+                break;
+
+            case 'normale':
+                $badge = 'badge-normale';
+                $txt = 'Normale';
+                break;
+
+            case 'haute':
+                $badge = 'badge-haute';
+                $txt = 'Haute';
+                break;
+
+            case 'critique':
+                $badge = 'badge-critique';
+                $txt = 'Critique';
+                break;
+
+            default:
+                $badge = 'badge-default';
+                $txt = htmlspecialchars($demande['urgence']);
+        }
+    ?>
+                            <span class="badge-urgence <?= $badge ?>"><?= $txt ?></span>
+
+                        </td>
+                        <td><?= htmlspecialchars($demande['date_creation_dm']) ?></td>
+                        <td>
+                            <?php 
+                            switch ($demande['statut']) {
+                                case 'en_attente':
+                                    $badge = 'badge-en-attente'; $txt = 'En attente'; break;
+                                case 'en_cours':
+                                    $badge = 'badge-en-cours'; $txt = 'En cours'; break;
+                                case 'validee':
+                                    $badge = 'badge-validee'; $txt = 'Validée'; break;
+                                case 'traite':
+                                    $badge = 'badge-traite'; $txt = 'Traité'; break;
+                                case 'rejete':
+                                    $badge = 'badge-rejetee'; $txt = 'Rejetée'; break;
+                                default:
+                                    $badge = 'badge-default'; 
+                                    $txt = htmlspecialchars($demande['statut']);
+                            }
+                            ?>
+                            <span class="badge-status <?= $badge ?>"><?= $txt ?></span>
+                        </td>
+                        <td>
+                            <?php if($demande['statut']==='en_attente'): ?>
+
+                            <button type="submit" class="action-btn btn-accept"
+                                id="<?= htmlspecialchars($demande['id_dm']) ?>">Valider</button>
+
+
+                            <button type="submit" class="action-btn btn-reject"
+                                id="<?= htmlspecialchars($demande['id_dm']) ?>">Rejeter</button>
+                           
+                            <?php else: ?>
+                            <button class="action-btn btn-accept disabled-btn" disabled>Valider</button>
+                            <button class="action-btn btn-reject disabled-btn" disabled>Rejeter</button>
+                            <?php endif; ?>
+                            <button class="action-btn btn-detail"
+                                id="<?= htmlspecialchars($demande['id_dm']) ?>">Détails</button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
     </main>
 
     <script>
@@ -145,14 +246,14 @@ $types_besoin = $typesBesoinObj->getTypesBesoin();
             const typeBesoin = String(d.type_besoin ?? '');
             const dateCreation = String(d.date_creation_dm ?? '');
             const statutHtml = renderStatus(d.statut ?? '');
-    /*let actionsHtml = (parseInt(d.transfere) === 0)      
+    let actionsHtml = (parseInt(d.transfere) === 0)      
     ? (d.statut === "en_attente"
         ? `<button type="button" class="action-btn btn-accept" data-id="${id}">Valider</button>
            <button type="button" class="action-btn btn-reject" data-id="${id}">Rejeter</button>`
         : `<button type="button" class="action-btn btn-accept disabled-btn" disabled>Valider</button>
            <button type="button" class="action-btn btn-reject disabled-btn" disabled>Rejeter</button>`)
     : `<span class="text-muted">Transférée à : ${d.recepteur_name ?? ''}</span>`;
-    actionsHtml += `<button type="button" class="action-btn btn-detail" data-id="${id}">Détails</button>`;*/
+    actionsHtml += `<button type="button" class="action-btn btn-detail" data-id="${id}">Détails</button>`;
 
             tr.innerHTML = `
                 <td>${id}</td>

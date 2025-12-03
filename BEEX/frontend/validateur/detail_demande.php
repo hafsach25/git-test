@@ -32,7 +32,19 @@ include ("header_menu.php") ?>
                         <div class="content-inter-left">
                             <p><strong>Demandeur :</strong> <span
                                     class="value"><?= htmlspecialchars($demande['demandeur']) ?></span></p>
-                                    <button type="button" class="btn btn-secondary btn-sm mb-2" id="<?= htmlspecialchars($demande['id_demandeur']); ?>">Voir les details du demandeur</button>
+                                    <?php if ($demande['transfere'] == 1): ?>
+    <!-- Bouton désactivé si la demande est transférée -->
+    <button type="button" class="disabled-tooltip" title="action non permise" disabled>
+   Voir les détails du demandeur
+    </button>
+<?php else: ?>
+    <!-- Bouton actif si demande normale -->
+    <button type="button" class="btn btn-secondary btn-sm mb-2" 
+            id="<?= htmlspecialchars($demande['id_demandeur']); ?>">
+        Voir les détails du demandeur
+    </button>
+<?php endif; ?>
+
                             <p><strong>Type de besoin :</strong><span class="value">
                                     <?= htmlspecialchars($demande['type_besoin']) ?></span></p>
                             <p><strong>Urgence :</strong> <?php 

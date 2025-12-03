@@ -72,7 +72,7 @@ if (isset($_POST['revenir_bord'])){
             <h3 class="section-title">Demande #<?= $dm['id_dm'] ?> </h3>
             <div class="row detail-row mb-2">
                 <div class="col-md-6">
-                    <p><strong>Service :</strong> <?= htmlspecialchars($dm['nom_service'] ?? '-') ?></p>
+                    <p><strong>Type de besoin :</strong> <?= htmlspecialchars($dm['type_besoin'] ?? '-') ?></p>
                     <p><strong>Urgence :</strong> <?php 
         switch ($dm['urgence_dm']) {
             case 'faible':

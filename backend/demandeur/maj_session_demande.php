@@ -9,14 +9,12 @@ $sql="SELECT
                 t.nom_tb AS type_besoin,
                 d.date_creation_dm,
                 d.status,
-                s.nom_service,
                 d.description_dm,
                 d.date_limite_dm,
                 d.urgence_dm,
                 d.transfere
             FROM demande d
             JOIN type_besoin t ON d.id_typedebesoin = t.id_tb
-            JOIN service s ON d.id_service = s.id_service
             WHERE d.id_demandeur = ?
             ORDER BY d.date_creation_dm DESC
         ";

@@ -29,13 +29,11 @@ class DemandeImporter
                 d.typedebesoin AS type_besoin,
                 d.date_creation_dm,
                 d.status,
-                s.nom_service,
                 d.description_dm,
                 d.date_limite_dm,
                 d.urgence_dm,
                 d.transfere
             FROM demande d
-            JOIN service s ON d.id_service = s.id_service
             WHERE d.id_demandeur = :id_demandeur
             ORDER BY d.id_dm DESC
         ";
