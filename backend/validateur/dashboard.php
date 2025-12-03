@@ -44,13 +44,19 @@ class DashboardStats
         $sql = "
             SELECT 
                 d.id_dm,
+                d.transfere,
+                v.nom_complet_v AS recepteur_name,
                 u.nom_complet_d AS demandeur_name,
                 d.urgence_dm AS urgence,
                 d.date_creation_dm,
                 d.status AS statut
             FROM demande d
             INNER JOIN demandeur u ON d.id_demandeur = u.id_d
+            INNER JOIN transfer t ON t.id_validateur_createur=u.id_validateur
+            LEFT JOIN validateur v ON t.id_validateur_recepteur = v.id_v
+            
             WHERE u.id_validateur = :idv
+
             ORDER BY d.date_creation_dm DESC
             LIMIT 3
         ";

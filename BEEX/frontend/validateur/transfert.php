@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $transfertDemande->transfererDemande($transfert, $date_debut, $date_fin, $raison);
         echo "<script>
-                alert('Le transfert a été envoyé avec succès !');
+                alert('Le transfert a été émis avec succès !');
                 window.location.href = 'dashboard.php';
               </script>";
         exit;
