@@ -56,16 +56,58 @@ include ("header_menu.php") ?>
                                     class="value"><?= htmlspecialchars($demande['demandeur']) ?></span></p>
                             <p><strong>Type de besoin :</strong><span class="value">
                                     <?= htmlspecialchars($demande['type_besoin']) ?></span></p>
-                            <p><strong>Urgence :</strong> <span
-                                    class="value"><?= htmlspecialchars($demande['urgence_dm']) ?></span></p>
+                            <p><strong>Urgence :</strong> <?php 
+        switch ($demande['urgence_dm']) {
+            case 'faible':
+                $badge = 'badge-faible';
+                $txt = 'Faible';
+                break;
+
+            case 'normale':
+                $badge = 'badge-normale';
+                $txt = 'Normale';
+                break;
+
+            case 'haute':
+                $badge = 'badge-haute';
+                $txt = 'Haute';
+                break;
+
+            case 'critique':
+                $badge = 'badge-critique';
+                $txt = 'Critique';
+                break;
+
+            default:
+                $badge = 'badge-default';
+                $txt = htmlspecialchars($demande['urgence_dm']);
+        }
+    ?>
+    <span class="badge-urgence <?= $badge ?>"><?= $txt ?></span></p>
                         </div>
                         <div class="content-inter-right">
                             <p><strong>Date de création :</strong> <span
                                     class="value"><?= htmlspecialchars($demande['date_creation_dm']) ?></span></p>
                             <p><strong>Departement:</strong><span class="value">
                                     <?= htmlspecialchars($demande['departement']) ?></span></p>
-                            <p><strong>Statut actuel :</strong> <span
-                                    class="value"><?= htmlspecialchars($demande['status']) ?></span></p>
+                            <p><strong>Statut actuel :</strong> <?php 
+                            switch ($demande['status']) {
+                                case 'en_attente':
+                                    $badge = 'badge-en-attente'; $txt = 'En attente'; break;
+                                case 'en_cours':
+                                    $badge = 'badge-en-cours'; $txt = 'En cours'; break;
+                                case 'validee':
+                                    $badge = 'badge-validee'; $txt = 'Validée'; break;
+                                case 'traite':
+                                    $badge = 'badge-traite'; $txt = 'Traité'; break;
+                                case 'rejete':
+                                    $badge = 'badge-rejetee'; $txt = 'Rejetée'; break;
+                                default:
+                                    $badge = 'badge-default'; 
+                                    $txt = htmlspecialchars($demande['status']);
+                            }
+                        ?>
+                            <span class="badge-status <?= $badge ?>"><?= $txt ?></span></p>
                         </div>
                     </div>
 
@@ -90,16 +132,15 @@ include ("header_menu.php") ?>
             <div class="form-wrapper d-flex justify-content-center">
                 <div class="card shadow-sm p-4">
                     <h2>pièces jointes :</h2>
-                    <div class="content-inter">
-                        <?php if (!empty($demande['fichier'])) : ?>
-                        <a href="../../../uploads/<?= htmlspecialchars($demande['fichier']) ?>" download>
-                            Télécharger la pièce jointe
-                        </a>
-                        <?php else : ?>
-                        <p>Aucune pièce jointe.</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
+                    <div class="form-text-muted mb-4">
+                                Pièce jointe actuelle :
+                                <?php if ($demande['fichier']): ?>
+                                <a href="../../../backend/uploads/<?= htmlspecialchars($demande['fichier']) ?>" download="<?= htmlspecialchars($demande['fichier']) ?>">
+                                    <?= htmlspecialchars($demande['fichier']) ?></a>
+                                <?php else: ?>
+                                Aucune pièce jointe.
+                                <?php endif; ?>
+                            </div>
 
             </div>
         </div>

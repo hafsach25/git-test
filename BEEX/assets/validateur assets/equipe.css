@@ -38,9 +38,46 @@ body {
     margin-bottom: 30px;
 }
 
-.page-subtitle {
-    color: #555;
+.subtitle {
+    color: var(--beex-blue);
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.filters-card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     margin-bottom: 30px;
+    border: 4px solid var(--beex-blue);
+    width: 80%;
+    max-width: 900px;
+    margin: 0 auto; /* centre la card */
+    margin-bottom: 30px;
+}
+
+/* Aligne label + input sur une seule ligne */
+.search-inline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center; /* centre l'ensemble */
+}
+
+/* Label */
+.search-label {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Input */
+.search-input {
+    flex: 1;
+    max-width: 300px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
 /* Tableau */
@@ -50,15 +87,30 @@ body {
     border-radius: 12px;
     box-shadow: 0 6px 15px rgba(0,0,0,0.1);
     margin-bottom: 30px;
+    border-top: 4px solid #0049F9;
 }
+.table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
 
-.table th, .table td {
-    vertical-align: middle;
-}
+    .table thead th {
+        background-color: var(--beex-bg);
+        color: var(--beex-dark);
+        font-weight: bold;
+        padding: 14px 16px;
+        border-bottom: 2px solid var(--beex-blue);
+        text-align: left;
+    }
 
-.table-hover tbody tr:hover {
-    background-color: #f1f1f1;
-}
+    .table tbody td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .tabletbody tr:hover { background-color: rgba(0, 73, 249, 0.03); }
+
 
 /* Boutons détail */
 .btn-detail {

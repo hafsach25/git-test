@@ -21,30 +21,34 @@ class AddDemande {
 
 
 
-        // Gestion des pièces jointes
-        $attachements = [];
-        $uploadDir = __DIR__ . '/../uploads/';
+      $uploadDir = __DIR__ . '/../uploads/';
 
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
+if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+$attachmentName = null;
+
+if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) {
+    $tmpName = $_FILES['attachments']['tmp_name'][0];
+    $originalName = $_FILES['attachments']['name'][0]; // GARDER TEL QUEL
+    $targetFile = $uploadDir . $originalName;
+
+    // Vérifier le type de fichier (optionnel mais recommandé)
+    $allowedTypes = ['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime = finfo_file($finfo, $tmpName);
+    finfo_close($finfo);
+
+    if (in_array($mime, $allowedTypes)) {
+        if (move_uploaded_file($tmpName, $targetFile)) {
+            $attachmentName = $originalName; // nom + extension réel
         }
+    } else {
+        // Optionnel : gestion des fichiers non autorisés
+        $attachmentName = null;
+    }
+}
 
-        if (isset($_FILES['attachments'])) {
-            foreach ($_FILES['attachments']['tmp_name'] as $key => $tmpName) {
-                if ($_FILES['attachments']['error'][$key] === 0) {
 
-                    $fileName = time() . '_' . basename($_FILES['attachments']['name'][$key]);
-                    $targetFile = $uploadDir . $fileName;
-
-                    if (move_uploaded_file($tmpName, $targetFile)) {
-                        $attachements[] = $fileName;
-                    }
-                }
-            }
-        }
-
-        $attachementsJson = !empty($attachements) ? json_encode($attachements) : null;
-        
 
         // Insert dans la table demande
         $sql = "INSERT INTO demande 
@@ -61,7 +65,7 @@ class AddDemande {
             ':description'  => $description,
             ':urgence'      => $urgence,
             ':date_limite'  => $date_limite,
-            ':attachement'  => $attachementsJson
+            ':attachement'  => $attachmentName
         ]);
 
         return $this->pdo->lastInsertId();

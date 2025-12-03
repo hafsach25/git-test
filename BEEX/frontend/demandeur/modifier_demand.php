@@ -33,7 +33,19 @@ $urgence = $demande['urgence'] ?? '';
 $date_limite = $demande['date_limite'] ?? '';
 $attachments = $demande['attachments'] ?? '';
 $previousPage = $_SERVER['HTTP_REFERER'] ?? 'dashboard.php';
+//gestion de piece jointe
+$uploadDir = __DIR__ . '/../../../backend/uploads/';
+if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
+$newFile = null; // par défaut aucun fichier
+if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === 0) {
+    $filename = basename($_FILES['attachment']['name']); // nom original + extension
+    $targetFile = $uploadDir . $filename;
+
+    if (move_uploaded_file($_FILES['attachment']['tmp_name'], $targetFile)) {
+        $newFile = $filename; // on met à jour la colonne dans la base
+    }
+}
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type_besoin_new = $_POST['type_besoin'] ?? null;
@@ -47,18 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $filename = $attachments; // conserver fichier existant
 
-    // Upload du fichier si présent
-    if (!empty($_FILES['attachments']['name'][0])) {
-        $file = $_FILES['attachments']['name'][0];
-        $tmp_name = $_FILES['attachments']['tmp_name'][0];
-        $destination = __DIR__ . '/../../uploads/' . basename($file);
-        if (move_uploaded_file($tmp_name, $destination)) {
-            $filename = $file;
-        }
-    }
+  
 
     // Mise à jour de la demande
-    $demandeObj->updateDemande($id_dm, $type_besoin_new, $description_new, $urgence_new, $date_limite_new, $filename);
+    $demandeObj->updateDemande($id_dm, $type_besoin_new, $description_new, $urgence_new, $date_limite_new,  $newFile);
 
     // Message de succès via session
     echo "<script>
@@ -66,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             window.location.href ='dashboard.php';
           </script>";
     exit;
+
 }
 ?>
 <!DOCTYPE html>
@@ -141,12 +146,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     value="<?= $date_limite ?>" required>
                             </div>
 
-                            <!-- Pièces jointes -->
-                            <?php if ($attachments) : ?>
-                            <p>Fichier existant : <a href="../../uploads/<?= $attachments ?>"
-                                    target="_blank"><?= $attachments ?></a></p>
-                            <?php endif; ?>
-                            <input type="file" id="attachments" name="attachments[]" class="form-control" multiple>
+                            <input type="file" id="attachment" name="attachment" class="form-control">
+                            <div class="form-text-muted mb-4">
+                                Pièce jointe actuelle :
+                                <?php if ($attachments): ?>
+                                <a href="../../../backend/uploads/<?= htmlspecialchars($attachments) ?>" download="<?= htmlspecialchars($attachments) ?>">
+                                    <?= htmlspecialchars($attachments) ?></a>
+                                <?php else: ?>
+                                Aucune pièce jointe.
+                                <?php endif; ?>
+                            </div>
 
                             <!-- Boutons -->
                             <div class="btn-container mt-3 d-flex gap-3">

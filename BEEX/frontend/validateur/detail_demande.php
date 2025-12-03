@@ -32,7 +32,7 @@ include ("header_menu.php") ?>
                         <div class="content-inter-left">
                             <p><strong>Demandeur :</strong> <span
                                     class="value"><?= htmlspecialchars($demande['demandeur']) ?></span></p>
-                                    <button type="button" class="btn btn-secondary btn-sm mb-2" >Voir les details du demandeur</button>
+                                    <button type="button" class="btn btn-secondary btn-sm mb-2" id="<?= htmlspecialchars($demande['id_demandeur']); ?>">Voir les details du demandeur</button>
                             <p><strong>Type de besoin :</strong><span class="value">
                                     <?= htmlspecialchars($demande['type_besoin']) ?></span></p>
                             <p><strong>Urgence :</strong> <?php 
@@ -113,7 +113,7 @@ include ("header_menu.php") ?>
                     <h2>pièces jointes :</h2>
                     <div class="content-inter">
                         <?php if (!empty($demande['fichier'])) : ?>
-                        <a href="../../../uploads/<?= htmlspecialchars($demande['fichier']) ?>" download>
+                        <a href="../../../backend/uploads/<?= htmlspecialchars($demande['fichier']) ?>" download>
                             Télécharger la pièce jointe
                         </a>
                         <?php else : ?>
@@ -148,5 +148,9 @@ $('.btn-accept, .btn-reject').on('click', function() {
             window.location.href = '../../../backend/validateur/update_status.php?id_dm=' + demandeId + '&action=' + (isAccept ? 'validee' : 'rejete');
 
         }
+    });
+$('.btn-secondary').on('click', function() {
+        const demandeurId = $(this).attr('id');
+        window.location.href = 'details_demandeur.php?id=' + demandeurId;
     });
 </script>

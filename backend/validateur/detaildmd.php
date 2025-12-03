@@ -15,6 +15,7 @@ class DetailDmd {
     public function getDetails(int $id): ?array {
         $stmt = $this->db->prepare("SELECT
                 d.urgence_dm,
+                d.id_demandeur,
                 d.date_creation_dm,
                 d.status,
                 d.description_dm,

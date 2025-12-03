@@ -73,41 +73,80 @@ if (isset($_POST['revenir_bord'])){
             <div class="row detail-row mb-2">
                 <div class="col-md-6">
                     <p><strong>Service :</strong> <?= htmlspecialchars($dm['nom_service'] ?? '-') ?></p>
-                    <p><strong>Urgence :</strong> <?= htmlspecialchars($dm['urgence_dm']) ?></p>
+                    <p><strong>Urgence :</strong> <?php 
+        switch ($dm['urgence_dm']) {
+            case 'faible':
+                $badge = 'badge-faible';
+                $txt = 'Faible';
+                break;
+
+            case 'normale':
+                $badge = 'badge-normale';
+                $txt = 'Normale';
+                break;
+
+            case 'haute':
+                $badge = 'badge-haute';
+                $txt = 'Haute';
+                break;
+
+            case 'critique':
+                $badge = 'badge-critique';
+                $txt = 'Critique';
+                break;
+
+            default:
+                $badge = 'badge-default';
+                $txt = htmlspecialchars($dm['urgence_dm']);
+        }
+    ?>
+                        <span class="badge-urgence <?= $badge ?>"><?= $txt ?></span>
+                    </p>
                     <p><strong>Date limite :</strong> <?= htmlspecialchars($dm['date_limite_dm'] ?? '-') ?></p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>Date de création :</strong> <?= htmlspecialchars($dm['date_creation_dm']) ?></p>
-                    <p><strong>Status :</strong> <span
-                            style="color:var(--primary-blue); font-weight:bold;"><?= htmlspecialchars($dm['status']) ?></span>
+                    <p><strong>Status :</strong><?php 
+                            switch ($dm['status']) {
+                                case 'en_attente':
+                                    $badge = 'badge-en-attente'; $txt = 'En attente'; break;
+                                case 'en_cours':
+                                    $badge = 'badge-en-cours'; $txt = 'En cours'; break;
+                                case 'validee':
+                                    $badge = 'badge-validee'; $txt = 'Validée'; break;
+                                case 'traite':
+                                    $badge = 'badge-traite'; $txt = 'Traité'; break;
+                                case 'rejete':
+                                    $badge = 'badge-rejetee'; $txt = 'Rejetée'; break;
+                                default:
+                                    $badge = 'badge-default'; 
+                                    $txt = htmlspecialchars($dm['status']);
+                            }
+                        ?>
+                        <span class="badge-status <?= $badge ?>"><?= $txt ?></span>
                     </p>
                 </div>
             </div>
             <p><strong>Description :</strong><br><?= nl2br(htmlspecialchars($dm['description_dm'])) ?></p>
 
-            <!-- Pièces jointes -->
 
             <!-- Pièces jointes -->
             <?php if (!empty($dm['piece_jointe_dm'])): ?>
             <div class="attachments-section mt-3">
                 <p><strong>Pièces jointes :</strong></p>
-                <?php
-                        $fichiers = explode(',', $dm['piece_jointe_dm']); // séparés les fichiers par virgules
-                        foreach ($fichiers as $fichier):
-                        ?>
-                <!-- Lien cliquable pour ouvrir le fichier dans un nouvel onglet -->
-                <a href="<?= htmlspecialchars($fichier) ?>" target="_blank" class="attachment-item">
-                    <!-- target="_blank" ouvre le fichier dans un nouvel onglet.-->
-                    <!-- Icône pour représenter la pièce jointe -->
-                    <span class="attachment-icon"><i class="bi bi-paperclip"></i></span>
-                    <!-- Nom du fichier affiché -->
-                    <span class="attachment-name"><?= basename($fichier) ?></span>
-                    <!--récupère seulement le nom du fichier, pas le chemin complet.-->
+
+                <a href="../../../backend/uploads/<?= htmlspecialchars($dm['piece_jointe_dm']) ?>" download>
+                    Télécharger la pièce jointe
                 </a>
-                <?php endforeach; ?>
-            </div>
+
+                <?php else : ?>
+                <p>Aucune pièce jointe.</p>
+                
+            
             <?php endif; ?>
+            </div>
         </div>
+
         <?php endforeach; ?>
         <?php endif; ?>
     </main>
