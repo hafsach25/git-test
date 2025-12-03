@@ -31,7 +31,7 @@ class Auth {
                 "pass_col"  => "mdps_v",
                 "id_col"    => "id_v",
                 "name_col"  => "nom_complet_v",
-                "dashboard" => "../../BEEX/frontend/validateur/info_person_valid.php"
+                "dashboard" => "../../BEEX/frontend/validateur/dashboard.php"
             ],
             [
                 "table" => "demandeur",
