@@ -1,0 +1,245 @@
+:root {
+  --primary-blue: #0049f9;
+  --primary-green: #01bd96;
+  --text-dark: #212529;
+  --text-light: rgba(33, 37, 41, 0.75);
+  --white: #ffffff;
+  --border-light: #e0e0e0;
+  --shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.12);
+
+    --primary-red: #FF4757;
+    
+}
+/*contenu de retour et titre  */
+.cote{
+    margin-top:15px;
+    padding:40px;
+}
+/*boutton de retour*/
+.retour_dashboard {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-block;
+    margin-top: 30px;
+    transition: color 0.3s;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+/* titre */
+.cote h2{
+    font-size: 50px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-blue);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+
+}
+/*contenu general de formulaire*/
+.main-content {
+    margin-top: 8px;
+    padding: 1px;
+}
+
+ 
+.card{max-width: 900px; width: 100%;
+
+
+}
+/*element inchangeable info personnelles*/
+.form-text-muted{
+    
+    font-size: 13px;
+    color: #666;
+    margin-top: 6px;
+
+}
+.form-label{
+    font-weight: bold;
+    
+}
+.file-input-wrapper {
+    position: relative;
+}
+/*contenu des bouttons*/
+.btn-container{
+    display: flex;
+    justify-content: space-between; /* Annuler à gauche / Enregistrer à droite */
+    align-items: center;
+}
+/*boutton enregistrer*/
+.btn-save {
+    background: var(--primary-blue);
+    color:white;
+    padding: 10px 28px;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+/*boutton annuler*/
+.btn-cancel{
+    background: white;
+    color:var(--primary-blue);
+    padding: 10px 28px;
+    font-weight: bold;
+    border-radius: 12px;
+    border:2px solid var(--primary-blue);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+
+}
+/*boutton reinitialiser*/
+.btn-reinit{
+    padding: 10px 28px;
+    font-weight: bold;
+    background: #F0F0F0;
+    border-radius: 12px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+
+}
+/*clique sur enregistrer*/
+.btn-save:hover {
+    background: var(--primary-green);
+}
+
+/* Bouton désactivé */
+.btn-save:disabled {
+    background-color: #b5b5b5 !important;  /* gris désactivé */
+    color: #6e6e6e !important;
+    cursor:not-allowed;
+    pointer-events: none;
+}
+
+/*clique sur annuler*/
+.btn-cancel:hover{
+    background: var(--primary-green);
+
+}
+/*clique sur reinitialiser */
+.btn-reinit:hover{
+    background: var(--primary-green);
+
+}
+/*form de input*/
+.form-control{
+    background: #f2f4f7;
+    border: 1px solid #d4d8dd;
+
+}
+/*form de input inchangeable*/
+.form-control[readonly] {
+    background: #f2f4f7;
+    border: 1px solid #d4d8dd;
+    cursor: not-allowed;
+}
+/* titre :changer le mot de passe*/
+.my-4 h4{
+    color:var(--primary-green);
+    font-weight:bold;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+/* div de  :changer le mot de passe*/
+.mb-3{
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.input-beex[type="file"]::file-selector-button {
+    background: var(--beex-blue);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+}
+/* detail_demand:info generale de demandeur*/
+.content-inter {
+    display: flex;
+    margin-left:50px;
+    margin-right:50px;
+
+    justify-content: space-between; /* espace entre gauche et droite */
+    /*gap: 20px;  facultatif, espace entre colonnes */
+}
+.content-inter-left,
+.content-inter-right {
+    width: 48%;
+}
+/* Labels en gras + valeur en normal */
+.content-inter p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+.content-inter p strong {
+    font-weight: 700; /* en gras */
+    color: #333;
+}
+.content-inter p span {
+    font-weight: 400; /* valeurs de la BD NON gras */
+    color: #555;
+}
+/* titre page detail_demand*/
+.card h2{
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--primary-blue);
+    font-family:Georgia, 'Times New Roman', Times, serif;
+
+}
+.main-content1 .card {
+    width: 85%;                 /* augmente ou diminue comme tu veux */
+    max-width: 900px;          /* limite pour ne pas trop étirer */
+    margin-bottom: 20px;
+}
+.card-content p{
+
+      margin: 8px 0;
+    font-size: 16px;
+    
+}
+.action-btn{padding:5px 10px; border:none; border-radius:8px; color:white; font-weight:bold; margin-right:4px; }
+.btn-accept{background:var(--beex-green);}
+.btn-reject{background:var(--beex-red);}
+
+.btn-detail{background:#555;}
+
+.disabled-btn {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.badge-status{padding:5px 10px; border-radius:20px; font-weight:bold;}
+
+.badge-en-cours { background-color: rgba(0, 73, 249, 0.15); color: var(--primary-blue)  !important; border: 2px solid var(--primary-blue); }
+.badge-validee { background-color: rgba(1, 189, 150, 0.15); color: var(--primary-green)  !important; border: 2px solid var(--primary-green); }
+.badge-rejetee { background-color: rgba(255, 71, 87, 0.15); color: var(--primary-red)  !important; border: 2px solid var(--primary-red); }
+.badge-traite { background-color: rgba(156, 39, 176, 0.15); color: #9c27b0  !important; border: 2px solid #9c27b0; }
+.badge-en-attente { background-color: rgba(255, 193, 7, 0.15); color: #ffc107  !important; border: 2px solid #ffc107; }
+.badge-urgence {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge-faible {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: #4CAF50  !important;
+}
+
+.badge-normale {
+    background-color: rgba(33, 150, 243, 0.15);
+    color: #2196F3  !important;
+}
+
+.badge-haute {
+    background-color: rgba(255, 152, 0, 0.15);
+    color: #FF9800  !important;
+}
+
+.badge-critique {
+    background-color: rgba(244, 67, 54, 0.15);
+    color: #F44336 !important;
+}

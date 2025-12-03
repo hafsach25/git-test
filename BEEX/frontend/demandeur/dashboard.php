@@ -96,7 +96,7 @@ require_once __DIR__ ."/../../../backend/demandeur/stat_cards_process.php";
                                     $badge = 'badge-validee'; $txt = 'Validée'; break;
                                 case 'traite':
                                     $badge = 'badge-traite'; $txt = 'Traité'; break;
-                                case 'Rejetée':
+                                case 'rejete':
                                     $badge = 'badge-rejetee'; $txt = 'Rejetée'; break;
                                 default:
                                     $badge = 'badge-default'; 
