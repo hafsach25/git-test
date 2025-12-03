@@ -145,12 +145,14 @@ $types_besoin = $typesBesoinObj->getTypesBesoin();
             const typeBesoin = String(d.type_besoin ?? '');
             const dateCreation = String(d.date_creation_dm ?? '');
             const statutHtml = renderStatus(d.statut ?? '');
-
-            const actionsHtml = (d.statut === "en_attente")
-                ? `<button type="button" class="action-btn btn-accept" data-id="${id}">Valider</button>
-                   <button type="button" class="action-btn btn-reject" data-id="${id}">Rejeter</button>`
-                : `<button type="button" class="action-btn btn-accept disabled-btn" disabled>Valider</button>
-                   <button type="button" class="action-btn btn-reject disabled-btn" disabled>Rejeter</button>`;
+    /*let actionsHtml = (parseInt(d.transfere) === 0)      
+    ? (d.statut === "en_attente"
+        ? `<button type="button" class="action-btn btn-accept" data-id="${id}">Valider</button>
+           <button type="button" class="action-btn btn-reject" data-id="${id}">Rejeter</button>`
+        : `<button type="button" class="action-btn btn-accept disabled-btn" disabled>Valider</button>
+           <button type="button" class="action-btn btn-reject disabled-btn" disabled>Rejeter</button>`)
+    : `<span class="text-muted">Transférée à : ${d.recepteur_name ?? ''}</span>`;
+    actionsHtml += `<button type="button" class="action-btn btn-detail" data-id="${id}">Détails</button>`;*/
 
             tr.innerHTML = `
                 <td>${id}</td>
@@ -160,7 +162,6 @@ $types_besoin = $typesBesoinObj->getTypesBesoin();
                 <td>${dateCreation}</td>
                 <td>${statutHtml}</td>
                 <td>${actionsHtml}
-                    <button type="button" class="action-btn btn-detail" data-id="${id}">Détails</button>
                 </td>
             `;
 

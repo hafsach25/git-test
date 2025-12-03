@@ -181,7 +181,7 @@ $evolution = $dashboard->getEvolutionMensuelle($idValidateur, date('Y'));
                             <button class="action-btn btn-accept disabled-btn" disabled>Valider</button>
                             <button class="action-btn btn-reject disabled-btn" disabled>Rejeter</button>
                             <?php endif; ?>
-                            <? else: ?>
+                            <?php else: ?>
                             <span class="text-muted">Transférée à :
                                 <?= htmlspecialchars($demande['recepteur_name']) ?></span>
                             <?php endif; ?>
