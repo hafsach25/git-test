@@ -50,7 +50,7 @@ require_once __DIR__ ."/header_menu.php";?>
 
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>Nom</th>
                         <th>Email</th>
                         <th>Nombre de demandes</th>

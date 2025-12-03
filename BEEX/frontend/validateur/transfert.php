@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="cote">
         <a href="<?= htmlspecialchars($previousPage) ?>" class="retour_dashboard"><i class="bi bi-arrow-left"></i>
             Retour à la page d'accueil</a>
-        <h2>Transférer la demande à un autre validateur</h2>
+        <h2>Transférer les demandes à un autre validateur</h2>
     </div>
 
     <div class="main-content">
