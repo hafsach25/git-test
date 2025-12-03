@@ -1,31 +1,85 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../../backend/demandeur_traitm/ajout_demand.php';
+require_once __DIR__ . "/../../../backend/authentification/database.php";
 
+// Vérification session
 if (!isset($_SESSION['logged_in'])) {
     header("Location: ../../BEEX/frontend/authentification/login.php");
     exit;
 }
 
-$id_demandeur = $_SESSION['user_id'] ?? null;
+$id_demandeur = $_SESSION['user_id'];
+$pdo = (new Database())->pdo;
+
+// Charger les types de besoin
 require_once __DIR__ . "/../../../backend/demandeur/importer_type_besoins.php";
 $typeBesoin = new TypeBesoin();
 $types_besoin = $typeBesoin->getTypesBesoin();
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $demand_obj = new AddDemande();
-    $demand_nv = $demand_obj->addDemandeById($id_demandeur);
 
-    if ($demand_nv) {
-        $_SESSION['success_message'] = "La demande a été ajoutée avec succès !";
+    // Etape 1 : créer la demande
+    $demand_obj = new AddDemande();
+    $id_demande = $demand_obj->addDemandeById($id_demandeur);
+
+    if ($id_demande) {
+
+        // -------------------
+        //   LOGIQUE TRANSFERT
+        // -------------------
+
+        // Date de création au format date
+        $date_creation = date('Y-m-d');
+
+        // 1. Récupérer le valideur normal du demandeur
+        $sql = "SELECT id_validateur FROM demandeur WHERE id_d = :id_demandeur";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':id_demandeur' => $id_demandeur]);
+        $validateur_normal = $stmt->fetchColumn();
+
+        // 2. Vérifier si ce valideur a un transfert actif
+        $sqlTransfer = "SELECT id_validateur_recepteur
+                        FROM transfer
+                        WHERE id_validateur_createur = :validateur
+                        AND :date_creation BETWEEN date_debut_tr AND date_fin_tr
+                        LIMIT 1";
+
+        $stmtTransfer = $pdo->prepare($sqlTransfer);
+        $stmtTransfer->execute([
+            ':validateur' => $validateur_normal,
+            ':date_creation' => $date_creation
+        ]);
+
+        $validateur_recepteur = $stmtTransfer->fetchColumn();
+        // Si la demande est transférée, mettre à jour le validateur
+if ($validateur_recepteur) {
+    $update = "UPDATE demande
+               SET id_validateur = :id_validateur, transfere = 1
+               WHERE id_dm = :id_dm";
+    $stmtUpdate = $pdo->prepare($update);
+    $stmtUpdate->execute([
+        ':id_validateur' => $validateur_recepteur,
+        ':id_dm' => $id_demande
+    ]);
+}
+
+ 
+  
+  
+
+        // Succès
+        $_SESSION['success_message'] = "La demande a été ajoutée avec succès.";
         header("Location: dashboard.php");
         exit;
+
     } else {
-        $error = "Aucune demande n'a été ajoutée.";
+        $error = "Impossible d’ajouter la demande.";
     }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -42,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include("header_menu.php"); ?>
 
     <div class="cote">
-        <a href="dashboard.php" class="retour_dashboard">← Retour à la page d'accueil</a>
+        <a href="dashboard.php" class="retour_dashboard"><i class="bi bi-arrow-left"></i> Retour à la page d'accueil</a>
         <h2>Créer une demande</h2>
     </div>
 
@@ -124,22 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <script>
-            // Afficher l'input "Autre" seulement si sélectionné
-            document.getElementById('type_besoin').addEventListener('change', function() {
-                const otherInput = document.getElementById('other_type_container');
-                const newTypeInput = document.getElementById('new_type');
-
-                if (this.value === 'Autre') {
-                    otherInput.style.display = 'block';
-                    newTypeInput.required = true;
-                } else {
-                    otherInput.style.display = 'none';
-                    newTypeInput.required = false;
-                    newTypeInput.value = "";
-                }
-            });
-            </script>
 </body>
 
 </html>

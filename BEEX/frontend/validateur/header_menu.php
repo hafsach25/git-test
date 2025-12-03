@@ -6,7 +6,7 @@
     <link href="../../assets/demandeur assets/menu_header.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="../../jquery/jquery-3.7.1.min.js"></script>
-    <title>BEEX Demandeur</title>
+    <title>BEEX Validateur</title>
 </head>
 <div id="overlay" class="overlay"></div>
 <!-- L'overlay est un élément qui sert de fond semi-transparent apparaissant derrière le menu latéral -->
@@ -18,7 +18,7 @@
         <div class="logo" style="display:flex; align-items:center; gap:12px;">
             <!-- aligner les elements horizentalements, centrer verticalement avec un espace de 12 px entre eux -->
             <img src="../../assets/images/logo_beex2.png" alt="Logo BEEX" style="width:50px;">
-            <h4 style="margin:0; color:white;">Espace Demandeur</h4>
+            <h4 style="margin:0; color:white;">Espace Validateur</h4>
         </div>
     </div>
 
@@ -30,12 +30,25 @@
             <span class="icon"><i class="bi bi-house-door-fill"></i></span>
             <span>Dashboard</span>
         </a>
-        <a href="mes_demandes.php" class="menu-item">
-            <span class="icon"><i class="bi bi-file-earmark-text"></i></span>
-            <span>Mes demandes</span>
+        <a href="voir_equipe.php" class="menu-item">
+            <span class="icon"><i class="bi bi-people"></i></span>
+            <span>Mon Équipe</span>
+
+        </a>
+        <a href="transfert.php" class="menu-item">
+            <span class="icon"><i class="bi bi-arrow-left-right"></i></span>
+            <span>Transfert</span>
+
         </a>
 
-        <a href="info_personnelles.php" class="menu-item">
+        <a href="historique.php" class="menu-item">
+            <span class="icon"><i class="bi bi-clock-history"></i></span>
+            <span>Historique</span>
+
+        </a>
+
+
+        <a href="info_person_valid.php" class="menu-item">
             <span class="icon"><i class="bi bi-person-circle"></i></span>
             <span>Mes informations</span>
         </a>

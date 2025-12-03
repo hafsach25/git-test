@@ -18,5 +18,4 @@ if ($redirect) {
    header("Location: ../../BEEX/frontend/authentification/login.php?error=" . urlencode($error));
     exit;
 }
-?>
 

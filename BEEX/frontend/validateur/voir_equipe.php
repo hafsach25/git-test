@@ -1,138 +1,93 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../../backend/authentification/database.php';
+require_once __DIR__ . '/../../../backend/validateur/recup_equipe.php';
 
 // Vérification : seulement les validateurs ont accès
-if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'validateur') {
-    header("Location: ../authentification/login.php");
+if (!isset($_SESSION['logged_in'])) {
+    header("Location: ../../BEEX/frontend/authentification/login.php");
     exit;
 }
-
-$validateur_id = $_SESSION['user_id'];
-
 $db = new Database();
 $conn = $db->pdo;
 
+$validateur_id = $_SESSION['user_id'];
+$validateur_id = $_SESSION['user_id'] ?? 0;
+$validateur = new Validateur($validateur_id);
+
 // Récupérer les demandeurs supervisés
-$sql = "SELECT id_d, nom_complet_d, email_d
-        FROM demandeur
-        WHERE id_validateur = :id_validateur";
+$demandeurs = $validateur->getDemandeursSupervises();
 
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':id_validateur', $validateur_id, PDO::PARAM_INT);
-$stmt->execute();
+// Page précédente
+$previousPage = $_SERVER['HTTP_REFERER'] ?? 'dashboard.php';
 
-$demandeurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Équipe des Demandeurs – BEEX</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Équipe des Demandeurs – BEEX</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/validateur assets/equipe.css">
 
-<style>
-:root{
-    --beex-blue: #0049F9;
-    --beex-green: #01BD96;
-    --beex-red: #FF4757;
-    --beex-bg: #FBFCF9;
-    --beex-dark: black;
-}
-
-body{
-    font-family:'Segoe UI',sans-serif;
-    background:var(--beex-bg);
-    margin:0; padding:0;
-}
-
-.header{
-    background: linear-gradient(145deg, var(--beex-blue), var(--beex-green));
-    color:white;
-    padding:16px 32px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-.header-left{display:flex; align-items:center; gap:12px;}
-.header-left img{width:50px;}
-.user-avatar{
-    width:40px;height:40px;border-radius:50%;
-    background:linear-gradient(145deg,var(--beex-blue),var(--beex-green));
-    color:white; display:flex;align-items:center;justify-content:center;
-    font-weight:bold;
-}
-
-.main-content{padding:40px;}
-.page-title{font-size:28px; font-weight:700; color:var(--beex-blue); margin-bottom:10px;}
-.page-subtitle{color:#555; margin-bottom:30px;}
-
-.table-section{
-    background:white; 
-    padding:20px; 
-    border-radius:12px;
-    box-shadow:0 6px 15px rgba(0,0,0,0.1); 
-    margin-bottom:30px;
-}
-
-.btn-detail{
-    padding:5px 10px;
-    border:none;
-    border-radius:8px;
-    color:white;
-    background:#555;
-    font-weight:bold;
-}
-</style>
-</head>
 <body>
-        <?php
-require_once __DIR__ ."/../demandeur/header_menu.php";?>
+    <?php
+require_once __DIR__ ."/header_menu.php";?>
 
-<main class="main-content">
-    <h1 class="page-title">Équipe des Demandeurs</h1>
-    <p class="page-subtitle">Liste des demandeurs supervisés par vous</p>
+    <main class="main-content">
+        <div class="cote">
+            <a href="dashboard.php" class="retour_dashboard text-decoration-none"><i class="bi bi-arrow-left "></i>
+                Retour à la page d'acceuil</a>
+        </div>
+        <h1 class="page-title">Équipe des Demandeurs</h1>
+        <p class="page-subtitle">Liste des demandeurs supervisés par vous</p>
 
-    <div class="table-section">
-        <h3>Liste des demandeurs</h3>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="table-section">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
 
-                <?php if (empty($demandeurs)): ?>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>nombre de demandes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <?php if (empty($demandeurs)): ?>
                     <tr>
                         <td colspan="4" class="text-danger text-center">
                             Aucun demandeur n’est associé à votre compte.
                         </td>
                     </tr>
-                <?php else: ?>
+                    <?php else: ?>
                     <?php foreach ($demandeurs as $d): ?>
                     <tr>
-                        <td><?= htmlspecialchars($d['id_d']) ?></td>
+
                         <td><?= htmlspecialchars($d['nom_complet_d']) ?></td>
                         <td><?= htmlspecialchars($d['email_d']) ?></td>
+                        <td><?= $d['nb_demandes'] ?></td>
+
+
                         <td>
                             <a href="details_demandeur.php?id=<?= $d['id_d'] ?>">
                                 <button class="btn-detail">Détails</button>
                             </a>
+
                         </td>
                     </tr>
                     <?php endforeach; ?>
-                <?php endif; ?>
+                    <?php endif; ?>
 
-            </tbody>
-        </table>
-    </div>
-</main>
+                </tbody>
+            </table>
+        </div>
+    </main>
 </body>
+
 </html>

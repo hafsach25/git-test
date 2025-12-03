@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../../backend/validateur/transfert_demande.php';
 
 // Vérifier connexion AVANT d'utiliser la session
 if (!isset($_SESSION['logged_in'])) {
@@ -17,45 +18,34 @@ $previousPage = $_SERVER['HTTP_REFERER'] ?? 'dashboard.php';
 
 // ID utilisateur connecté
 $id_actuel = $_SESSION['user_id'] ?? 0;
+$transfertDemande = new TransfertDemande($id_actuel);
 
-// Récupération des validateurs (sauf l’actuel)
-$sql = "SELECT id_v, nom_complet_v
-        FROM validateur 
-        WHERE id_v != :id_actuel";
-$stmt = $connexion->prepare($sql);
-$stmt->bindParam(':id_actuel', $id_actuel, PDO::PARAM_INT);
-$stmt->execute();
-$validateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
+// Récupérer les autres validateurs
+$validateurs = $transfertDemande->getAutresValidateurs();
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $date_debut = $_POST['date_debut'] ?? null;
     $date_fin = $_POST['date_fin'] ?? null;
-    $raison = $_POST['comment'] ?? '';
-    $transfert = $_POST['transfert'] ?? '';
-    $notify = isset($_POST['notifyEmail']) ? 1 : 0;
+    $raison = $_POST['raison'] ?? '';
+    $transfert = $_POST['recepteur'] ?? '';
 
-    // Vérifications
     if (!$date_debut || !$date_fin || !$transfert) {
         die("Veuillez remplir tous les champs obligatoires.");
     }
-
     if ($date_fin < $date_debut) {
         die("La date fin ne peut pas être inférieure à la date début.");
     }
 
-    // ----------------------------------------------------------
-    // ⚠️ ATTENTION : aucun enregistrement n'est encore fait ici.
-    // Ajoute ton INSERT ou UPDATE selon ton besoin.
-    // ----------------------------------------------------------
-
-    echo "<script>
-            alert('Le transfert a été envoyé avec succès !');
-            window.location.href = 'dashboard.php';
-          </script>";
-    exit;
+    try {
+        $transfertDemande->transfererDemande($transfert, $date_debut, $date_fin, $raison);
+        echo "<script>
+                alert('Le transfert a été envoyé avec succès !');
+                window.location.href = 'dashboard.php';
+              </script>";
+        exit;
+    } catch (PDOException $e) {
+        die("Erreur lors de l'enregistrement du transfert : " . $e->getMessage());
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -63,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
 
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>transferer la demande</title>
     <link href="../../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet">
@@ -72,10 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <?php 
-    require_once __DIR__ . '/../demandeur/header_menu.php'; ?>
+    require_once __DIR__ . '/header_menu.php'; ?>
 
     <div class="cote">
-        <a href="<?= htmlspecialchars($previousPage) ?>" class="retour_dashboard"><i class="bi bi-arrow-left\"></i>
+        <a href="<?= htmlspecialchars($previousPage) ?>" class="retour_dashboard"><i class="bi bi-arrow-left"></i>
             Retour à la page d'accueil</a>
         <h2>Transférer la demande à un autre validateur</h2>
     </div>
@@ -105,8 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="mb-4">
                                 <label for="transfert" class="form-label">Transférer à<span
                                         class="required-indicator">*</span></label>
-                                <select id="transfert" name="transfert" class="form-control" required>
-                                    <option value="\">--Sélectionnez un validateur--</option>
+                                <select id="transfert" name="recepteur" class="form-control" required>
+                                    <option value="">--Sélectionnez un validateur--</option>
                                     <?php foreach ($validateurs as $v) : ?>
                                     <option value="<?= htmlspecialchars($v['id_v']) ?>">
                                         <?= htmlspecialchars($v['nom_complet_v']) ?>
@@ -118,18 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- Commentaire -->
                             <div class="mb-3">
                                 <label for="comment" class="form-label">Commentaire / raison du transfert</label>
-                                <textarea class="form-control" id="comment" rows="3" name="comment"
-                                    placeholder="Ex: En congé du 25/11 au 30/11\"></textarea>
+                                <textarea class="form-control" id="comment" rows="3" name="raison"
+                                    placeholder="Ex: En congé du 25/11 au 30/11"></textarea>
                             </div>
-
-                            <!-- Notification email -->
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" name="notifyEmail" id="notifyEmail">
-                                <label class="form-check-label" for="notifyEmail">
-                                    Notifier le validateur par email
-                                </label>
-                            </div>
-
                             <!-- Boutons -->
                             <div class="btn-container mt-3 d-flex gap-3">
                                 <button type="reset" class="btn-reinit">Réinitialiser</button>
