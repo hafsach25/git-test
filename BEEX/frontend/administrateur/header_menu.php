@@ -30,14 +30,14 @@
             <span class="icon"><i class="bi bi-house-door-fill"></i></span>
             <span>Dashboard</span>
         </a>
-        <a href="voir_equipe.php" class="menu-item">
+        <a href="gestion_utilisateur.php" class="menu-item">
             <span class="icon"><i class="bi bi-people"></i></span>
             <span>Gestion des utilisateurs</span>
 
         </a>
-        <a href="transfert.php" class="menu-item">
+        <a href="gestion_demandes.php" class="menu-item">
             <span class="icon"><i class="bi bi-arrow-left-right"></i></span>
-            <span>Affectation  </span>
+            <span>Affectation et suivi des demandes </span>
 
         </a>
 
