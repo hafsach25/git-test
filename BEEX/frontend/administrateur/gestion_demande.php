@@ -1,400 +1,680 @@
+<?php
+include __DIR__ . "/../../../backend/demandeur/importer_type_besoins.php";
+$typesBesoinObj = new TypeBesoin();
+$types_besoin = $typesBesoinObj->getTypesBesoin();
+include __DIR__ . "/../../../backend/administrateur/gestion_demandes.php";
+$gestionDemandes = new GestionDemandes();
+$services = $gestionDemandes->getServices();
+$action = $_GET['action'] ?? '';
+$idDemande = $_GET['id_dm'] ?? '';
+$service = $_GET['service'] ?? '';
+$statut = $_GET['statut'] ?? '';
+
+// Traiter l'action AVANT de charger les données
+switch ($action) {
+    case 'affecter_service':
+        if (!empty($service) && !empty($idDemande)) {
+            $result = $gestionDemandes->affecterService($idDemande, $service);
+            if ($result['success']) {
+                header('Location: gestion_demande.php?msg=success');
+                exit;
+            } else {
+                header('Location: gestion_demande.php?msg=error');
+                exit;
+            }
+        }
+        break;
+       
+    case 'modifier_statut':
+        if (!empty($statut) && !empty($idDemande)) {
+            $result = $gestionDemandes->modifierStatut($idDemande, $statut);
+            if ($result['success']) {
+                header('Location: gestion_demande.php?msg=success');
+                exit;
+            } else {
+                header('Location: gestion_demande.php?msg=error');
+                exit;
+            }
+        }
+        break;
+}
+
+// Charger les demandes APRÈS le traitement
+$demandes = $gestionDemandes->importerDemandes();
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Espace Administration - Demandes</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Espace Administration - Demandes</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="../../assets/administrateur assets/gestion_demandes.css" rel="stylesheet">
 
-<link href="../../assets/administrateur assets/gestion_demandes.css" rel="stylesheet">
+ 
 </head>
+
 <body>
-
-
-
-<!-- App layout -->
-<div class="app container-fluid">
-
-    <!-- Content -->
-    <section class="content">
-        <div class="header-row">
-            <div>
-                <div class="page-title">Affectation et Suivi des Demandes</div>
-                <div class="page-sub">Gérer et suivre les demandes validées</div>
-            </div>
-
-            <div style="display:flex;align-items:center;gap:12px">
-                <div style="background:white;padding:8px 12px;border-radius:10px;font-weight:700">Bienvenue, Noura</div>
-            </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-card green">
-                <div class="title">Demandes validées</div>
-                <div class="value" id="statValide">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="title">Demandes en cours</div>
-                <div class="value" id="statEnCours" style="color:#0b63f0">0</div>
-            </div>
-            <div class="stat-card red">
-                <div class="title">Demandes rejetées</div>
-                <div class="value" id="statRejete">0</div>
-            </div>
-        </div>
-
-        <!-- Filters -->
-        <div style="margin-bottom:18px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
-            <div>
-                <label class="form-label" style="font-weight:700">Service</label>
-                <select id="filterService" class="form-select">
-                    <option value="">Tous les services</option>
-                    <option>Achat</option><option>DSI</option><option>RH</option><option>Finance</option><option>Marketing</option>
-                    <option>Logistique</option><option>Support</option><option>IT</option><option>R&D</option><option>Admin</option>
-                </select>
-            </div>
-            <div>
-                <label class="form-label" style="font-weight:700">Statut</label>
-                <select id="filterStatut" class="form-select">
-                    <option value="">Tous</option><option>Validée</option><option>En cours</option><option>Traitée</option><option>Rejetée</option>
-                </select>
-            </div>
-            <div>
-                <label class="form-label" style="font-weight:700">Urgence</label>
-                <select id="filterUrgence" class="form-select">
-                    <option value="">Toutes</option><option>Urgente</option><option>Moyenne</option><option>Faible</option>
-                </select>
-            </div>
-
-            <div style="margin-left:auto">
-                <button class="btn" style="background:#0b63f0;color:#fff;font-weight:800" onclick="refreshTable()"><i class="bi bi-arrow-clockwise"></i> Rafraîchir</button>
-            </div>
-        </div>
-
-        <!-- Table card -->
-        <div class="table-card">
-            <div class="table-title">Liste des demandes</div>
-            <div class="table-header">
-                <div>ID Demande</div><div>Date</div><div>Demandeur</div><div>Type de besoin</div><div>Service assigné</div><div>Statut</div><div>Urgence</div><div>Actions</div>
-            </div>
-
-            <div id="tableBody">
-                <!-- rows injected by JS -->
-            </div>
-
-            <div class="pagination" id="pagination">
-                <button onclick="changePage(-1)" id="prevBtn"><i class="bi bi-chevron-left"></i></button>
-                <button class="pageBtn active" data-page="1" onclick="goToPage(1)">1</button>
-                <button class="pageBtn" data-page="2" onclick="goToPage(2)">2</button>
-                <button onclick="changePage(1)" id="nextBtn"><i class="bi bi-chevron-right"></i></button>
-            </div>
-            <div style="text-align:center;color:#0b63f0;font-weight:700"><a href="#" onclick="return false">Voir plus</a></div>
-        </div>
-
-    </section>
-</div>
-
-<!-- Floating button -->
-<button class="fab" onclick="alert('Nouvelle demande')"><i class="bi bi-plus-circle"></i> Nouvelle demande</button>
-
-<!-- Modals -->
-<div class="modal-custom" id="modalAffecter" aria-hidden="true">
-    <div class="modal-panel" role="dialog">
-        <div class="modal-header">
-            <h5>Affecter un service</h5>
-            <button class="close-x" onclick="closeModal('modalAffecter')"><i class="bi bi-x"></i></button>
-        </div>
-        <div class="modal-body">
-            <div class="mb-3">
-                <label class="form-label">Choisir un service</label>
-                <select id="selectService" class="form-select">
-                    <option value="">-- Sélectionner --</option>
-                    <option>Achat</option><option>DSI</option><option>RH</option><option>Finance</option><option>Marketing</option>
-                    <option>Logistique</option><option>Support</option><option>IT</option><option>R&D</option><option>Admin</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-light" onclick="closeModal('modalAffecter')">Annuler</button>
-            <button class="btn btn-primary" onclick="affecterService()">Affecter</button>
-        </div>
+    <?php if (isset($_GET['msg'])): ?>
+    <div class="alert alert-<?= $_GET['msg'] === 'success' ? 'success' : 'danger' ?>" style="position:fixed;top:20px;right:20px;z-index:9999;min-width:300px;">
+        <?= $_GET['msg'] === 'success' ? 'Opération effectuée avec succès' : 'Une erreur est survenue' ?>
     </div>
-</div>
+    <script>
+        setTimeout(() => {
+            document.querySelector('.alert').style.display = 'none';
+        }, 3000);
+    </script>
+    <?php endif; ?>
 
-<div class="modal-custom" id="modalStatut" aria-hidden="true">
-    <div class="modal-panel" role="dialog">
-        <div class="modal-header">
-            <h5>Modifier le statut</h5>
-            <button class="close-x" onclick="closeModal('modalStatut')"><i class="bi bi-x"></i></button>
-        </div>
-        <div class="modal-body">
-            <div class="mb-3">
-                <label class="form-label">Nouveau statut</label>
-                <select id="selectStatut" class="form-select">
-                    <option value="">-- Sélectionner --</option>
-                    <option>Validée</option><option>En cours</option><option>Traitée</option><option>Rejetée</option>
-                </select>
+    <?php include "header_menu.php" ?>
+    
+    <main class="main-content">
+        <section class="content">
+            <div class="header-row">
+                <div>
+                    <div class="page-title">Affectation et Suivi des Demandes</div>
+                    <div class="page-sub">Gérer et suivre les demandes validées</div>
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Commentaire (optionnel)</label>
-                <textarea id="commentaire" class="form-control" rows="3" placeholder="Ajouter un commentaire..."></textarea>
+
+            <!-- Stats -->
+            <div class="stats-container">
+                <div class="stat-card blue">
+                    <div class="stat-title">Demandes reçues</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-title">Demandes en cours</div>
+                    <div class="stat-value">2</div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-title">Demandes traitées</div>
+                    <div class="stat-value">3</div>
+                </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-light" onclick="closeModal('modalStatut')">Annuler</button>
-            <button class="btn btn-primary" onclick="modifierStatut()">Mettre à jour</button>
-        </div>
-    </div>
-</div>
 
-<div class="modal-custom" id="modalDetails" aria-hidden="true">
-    <div class="modal-panel" role="dialog">
-        <div class="modal-header">
-            <h5>Détails de la demande</h5>
-            <button class="close-x" onclick="closeModal('modalDetails')"><i class="bi bi-x"></i></button>
-        </div>
-        <div class="modal-body" id="detailsContent"></div>
-        <div class="modal-footer">
-            <button class="btn btn-light" onclick="closeModal('modalDetails')">Fermer</button>
-        </div>
-    </div>
-</div>
+            <!-- Filtres -->
+            <div class="filters-card">
+                <h5><i class="bi bi-search"></i> Filtres de recherche</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Type de besoin</label>
+                        <select class="form-select filter-select" id="filterType" name="type_besoin">
+                            <option value="">Sélectionner un type</option>
+                            <?php foreach ($types_besoin as $type): ?>
+                            <option value="<?= htmlspecialchars($type['nom_tb']) ?>">
+                                <?= htmlspecialchars($type['nom_tb']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-<div class="modal-custom" id="modalHistorique" aria-hidden="true">
-    <div class="modal-panel" role="dialog">
-        <div class="modal-header">
-            <h5>Historique de la demande</h5>
-            <button class="close-x" onclick="closeModal('modalHistorique')"><i class="bi bi-x"></i></button>
-        </div>
-        <div class="modal-body" id="historiqueContent"></div>
-        <div class="modal-footer">
-            <button class="btn btn-light" onclick="closeModal('modalHistorique')">Fermer</button>
-        </div>
-    </div>
-</div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Statut</label>
+                        <select class="form-select filter-select" id="filterStatus">
+                            <option value="">Tous les statuts</option>
+                            <option value="traite">Traitée</option>
+                            <option value="en_cours">En cours</option>
+                            <option value="validee">Validée</option>
+                        </select>
+                    </div>
 
-<div class="toast-success" id="toast">Action effectuée</div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Période</label>
+                        <select class="form-select filter-select" id="filterPeriod">
+                            <option value="">Toute la période</option>
+                            <option value="7days">Derniers 7 jours</option>
+                            <option value="1month">Dernier mois</option>
+                            <option value="3months">Derniers 3 mois</option>
+                            <option value="6months">Derniers 6 mois</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Urgence</label>
+                        <select class="form-select filter-select" id="filterUrgence">
+                            <option value="">Tous</option>
+                            <option value="faible">Faible</option>
+                            <option value="normale">Normale</option>
+                            <option value="haute">Haute</option>
+                            <option value="critique">Critique</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Service</label>
+                        <select class="form-select filter-select" id="filterService">
+                            <option value="">-- Sélectionner --</option>
+                            <?php foreach ($services as $service): ?>
+                                <option value="<?= $service['id_service'] ?>">
+                                    <?= htmlspecialchars($service['nom_service']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // Data: 8 demandes
-    let allData = [
-        { id: 'DEM-001', date: '25/11/2025', demandeur: 'Soufiane Ahmed', type: 'Achat matériel', service: 'Non affecté', statut: 'Validée', urgence: 'Urgente', history: [] },
-        { id: 'DEM-002', date: '24/11/2025', demandeur: 'Imane Fatima', type: 'Logiciel', service: 'DSI', statut: 'En cours', urgence: 'Moyenne', history: [] },
-        { id: 'DEM-003', date: '23/11/2025', demandeur: 'Ahmed Ali', type: 'Formation', service: 'RH', statut: 'Traitée', urgence: 'Faible', history: [] },
-        { id: 'DEM-004', date: '22/11/2025', demandeur: 'Karim Salim', type: 'Fournitures', service: 'Admin', statut: 'En cours', urgence: 'Faible', history: [] },
-        { id: 'DEM-005', date: '21/11/2025', demandeur: 'Rawan Ali', type: 'Service externe', service: 'Finance', statut: 'Traitée', urgence: 'Urgente', history: [] },
-        { id: 'DEM-006', date: '20/11/2025', demandeur: 'Fatima Douaibi', type: 'Logiciel', service: 'Non affecté', statut: 'Validée', urgence: 'Urgente', history: [] },
-        { id: 'DEM-007', date: '19/11/2025', demandeur: 'Nasrin Bouamira', type: 'Formation', service: 'RH', statut: 'Validée', urgence: 'Moyenne', history: [] },
-        { id: 'DEM-008', date: '18/11/2025', demandeur: 'Karim Salim', type: 'Fournitures', service: 'Admin', statut: 'En cours', urgence: 'Faible', history: [] }
-    ];
-
-    const itemsPerPage = 4;
-    let currentPage = 1;
-    let editingId = null; // for modals
-
-    function badgeStatut(s){
-        if(!s) return '';
-        s = s.toLowerCase();
-        if(s.includes('valid')) return '<span class="badge-pill badge-valid">Validée</span>';
-        if(s.includes('en cours')) return '<span class="badge-pill badge-encours">En cours</span>';
-        if(s.includes('trait')) return '<span class="badge-pill badge-traitee">Traitée</span>';
-        if(s.includes('rejet')) return '<span class="badge-pill badge-rejet">Rejetée</span>';
-        return `<span class="badge-pill">${s}</span>`;
-    }
-    function badgeUrgence(u){
-        if(!u) return '';
-        u = u.toLowerCase();
-        if(u.includes('urg')) return '<span class="badge-pill badge-urgente">Urgente</span>';
-        if(u.includes('moy')) return '<span class="badge-pill badge-moyenne">Moyenne</span>';
-        if(u.includes('faib')) return '<span class="badge-pill badge-faible">Faible</span>';
-        return `<span class="badge-pill">${u}</span>`;
-    }
-
-    function renderStats(){
-        const valide = allData.filter(d => d.statut === 'Validée').length;
-        const encours = allData.filter(d => d.statut === 'En cours').length;
-        const rejete = allData.filter(d => d.statut === 'Rejetée').length;
-        $('#statValide').text(valide);
-        $('#statEnCours').text(encours);
-        $('#statRejete').text(rejete);
-    }
-
-    function renderTable(){
-        const filterService = $('#filterService').val();
-        const filterStatut = $('#filterStatut').val();
-        const filterUrgence = $('#filterUrgence').val();
-
-        let filtered = allData.filter(d=>{
-            if(filterService && d.service !== filterService) return false;
-            if(filterStatut && d.statut !== filterStatut) return false;
-            if(filterUrgence && d.urgence !== filterUrgence) return false;
-            return true;
-        });
-
-        const maxPage = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-        if(currentPage > maxPage) currentPage = maxPage;
-
-        const start = (currentPage-1)*itemsPerPage;
-        const pageData = filtered.slice(start, start + itemsPerPage);
-
-        let html = pageData.map(d => `
-            <div class="table-row" data-id="${d.id}">
-                <div class="cell"><strong>${d.id}</strong></div>
-                <div class="cell">${d.date}</div>
-                <div class="cell">${d.demandeur}</div>
-                <div class="cell">${d.type}</div>
-                <div class="cell">${d.service}</div>
-                <div class="cell">${badgeStatut(d.statut)}</div>
-                <div class="cell">${badgeUrgence(d.urgence)}</div>
-                <div class="cell actions">
-                    <div class="action-buttons">
-                        <button class="btn-action" onclick="openAffecterModal('${d.id}')"><i class="bi bi-arrow-right-square"></i> Affecter</button>
-                        <button class="btn-action secondary" onclick="openStatutModal('${d.id}')"><i class="bi bi-pencil"></i> Modifier</button>
-                        <button class="btn-action link" onclick="viewDetails('${d.id}')"><i class="bi bi-eye"></i> Détails</button>
-                        <button class="btn-action link" onclick="viewHistorique('${d.id}')"><i class="bi bi-clock-history"></i> Historique</button>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-bold">Rechercher un demandeur</label>
+                        <input type="text" id="filterSearch" class="form-control" placeholder="Nom complet...">
                     </div>
                 </div>
             </div>
-        `).join('');
-        if(!html) html = '<div style="padding:20px;text-align:center;color:var(--muted)">Aucune demande trouvée</div>';
-        $('#tableBody').html(html);
+            
+            <!-- Table card -->
+            <div class="table-card">
+                <div class="table-title">Liste des demandes</div>
+                <div class="table-header">
+                    <div>ID Demande</div>
+                    <div>Date de création</div>
+                    <div>Demandeur</div>
+                    <div>Type de besoin</div>
+                    <div>Service assigné</div>
+                    <div>Statut</div>
+                    <div>Urgence</div>
+                    <div>Actions</div>
+                </div>
 
-        // update pagination buttons active state
-        $('.pageBtn').removeClass('active');
-        $(`.pageBtn[data-page="${currentPage}"]`).addClass('active');
+                <div id="tableBody">
+                    <!-- rows injected by JS -->
+                </div>
 
-        // enable/disable nav
-        $('#prevBtn').prop('disabled', currentPage === 1);
-        $('#nextBtn').prop('disabled', currentPage === Math.ceil(filtered.length / itemsPerPage) || filtered.length === 0);
-
-        renderStats();
-    }
-
-    function goToPage(n){
-        currentPage = n;
-        renderTable();
-    }
-    function changePage(dir){
-        currentPage += dir;
-        if(currentPage < 1) currentPage = 1;
-        renderTable();
-    }
-
-    // Modal helpers
-    function openAffecterModal(id){
-        editingId = id;
-        $('#selectService').val('');
-        openModal('modalAffecter');
-    }
-    function openStatutModal(id){
-        editingId = id;
-        $('#selectStatut').val('');
-        $('#commentaire').val('');
-        openModal('modalStatut');
-    }
-    function viewDetails(id){
-        const d = allData.find(x=>x.id===id);
-        if(!d) return;
-        const html = `
-            <div style="display:flex;gap:18px;flex-direction:column">
-                <div><strong>ID:</strong> ${d.id}</div>
-                <div><strong>Demandeur:</strong> ${d.demandeur}</div>
-                <div><strong>Date:</strong> ${d.date}</div>
-                <div><strong>Type:</strong> ${d.type}</div>
-                <div><strong>Service assigné:</strong> ${d.service}</div>
-                <div><strong>Statut:</strong> ${d.statut}</div>
-                <div><strong>Urgence:</strong> ${d.urgence}</div>
+                <div class="pagination" id="pagination">
+                    <nav aria-label="Pagination des demandes">
+                        <ul class="pagination pagination-beex" id="paginationList"></ul>
+                    </nav>
+                </div>
             </div>
-        `;
-        $('#detailsContent').html(html);
-        openModal('modalDetails');
-    }
-    function viewHistorique(id){
-        const d = allData.find(x=>x.id===id);
-        if(!d) return;
-        const hist = d.history && d.history.length ? d.history.slice().reverse() : [{date:'--',action:'Aucune action',user:'-' }];
-        const html = hist.map(h=>`<div style="padding:10px;border-left:3px solid #0b63f0;background:#f8fbff;margin-bottom:8px;border-radius:6px"><div style="font-size:13px;color:var(--muted)">${h.date}</div><div style="font-weight:700">${h.action}</div><div style="font-size:13px;color:var(--muted)">Par: ${h.user||'Système'}</div></div>`).join('');
-        $('#historiqueContent').html(html);
-        openModal('modalHistorique');
-    }
+        </section>
+    </main>
 
-    function openModal(id){
-        $(`#${id}`).addClass('show').attr('aria-hidden','false');
-        // add click overlay to close
-        $(`#${id}`).off('click.modal').on('click.modal', function(e){
-            if(e.target === this) closeModal(id);
-        });
-    }
-    function closeModal(id){
-        $(`#${id}`).removeClass('show').attr('aria-hidden','true');
-    }
+    <!-- Modals -->
+    <div class="modal-custom" id="modalAffecter" aria-hidden="true">
+        <div class="modal-panel" role="dialog">
+            <div class="modal-header">
+                <h5><i class="bi bi-arrow-right-square-fill"></i> Affecter un service</h5>
+                <button class="close-x" onclick="closeModal('modalAffecter')" aria-label="Fermer"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-building"></i> Choisir un service</label>
+                    <select id="selectService" class="form-select">
+                        <option value="">-- Sélectionner un service --</option>
+                        <?php foreach ($services as $service): ?>
+                            <option value="<?= $service['id_service'] ?>">
+                                <?= htmlspecialchars($service['nom_service']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" onclick="closeModal('modalAffecter')"><i class="bi bi-x-circle"></i> Annuler</button>
+                <button class="btn btn-primary" onclick="affecterService()"><i class="bi bi-check-circle"></i> Affecter</button>
+            </div>
+        </div>
+    </div>
 
-    // Actions
-    function affecterService(){
-        const svc = $('#selectService').val();
-        if(!svc){ alert('Veuillez sélectionner un service'); return; }
-        const item = allData.find(d=>d.id === editingId);
-        if(item){
-            item.service = svc;
-            item.history = item.history || [];
-            item.history.push({date: new Date().toLocaleString(), action: `Affecté au service: ${svc}`, user: 'Administrateur'});
-            renderToast(`Demande ${editingId} affectée à ${svc}`);
-        }
-        closeModal('modalAffecter');
-        renderTable();
-    }
+    <div class="modal-custom" id="modalStatut" aria-hidden="true">
+        <div class="modal-panel" role="dialog">
+            <div class="modal-header">
+                <h5><i class="bi bi-pencil-square"></i> Modifier le statut</h5>
+                <button class="close-x" onclick="closeModal('modalStatut')" aria-label="Fermer"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-info-circle"></i> Nouveau statut</label>
+                    <select id="selectStatut" class="form-select">
+                        <option value="traite" selected>Traitée</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><i class="bi bi-chat-left-text"></i> Commentaire (optionnel)</label>
+                    <textarea id="commentaire" class="form-control" rows="4" placeholder="Ajouter un commentaire sur cette modification..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" onclick="closeModal('modalStatut')"><i class="bi bi-x-circle"></i> Annuler</button>
+                <button class="btn btn-primary" onclick="modifierStatut()"><i class="bi bi-check-circle"></i> Mettre à jour</button>
+            </div>
+        </div>
+    </div>
 
-    function modifierStatut(){
-        const stat = $('#selectStatut').val();
-        const comm = $('#commentaire').val();
-        if(!stat){ alert('Veuillez sélectionner un statut'); return; }
-        const item = allData.find(d=>d.id === editingId);
-        if(item){
-            item.statut = stat;
-            item.history = item.history || [];
-            item.history.push({date: new Date().toLocaleString(), action: `Statut changé en ${stat}${comm?(' - '+comm):''}`, user:'Administrateur'});
-            renderToast(`Statut de ${editingId} mis à jour: ${stat}`);
-        }
-        closeModal('modalStatut');
-        renderTable();
-    }
+    <div class="modal-custom" id="modalDetails" aria-hidden="true">
+        <div class="modal-panel" role="dialog">
+            <button class="close-x" onclick="closeModal('modalDetails')" aria-label="Fermer"><i class="bi bi-x-lg"></i></button>
+            <div class="modal-body" id="detailsContent" style="padding:0;"></div>
+        </div>
+    </div>
 
-    function renderToast(msg){
-        $('#toast').text(msg).addClass('show');
-        setTimeout(()=>$('#toast').removeClass('show'), 2600);
-    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+let allData = <?= json_encode($demandes, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 
-    function refreshTable(){
-        renderTable();
-        renderToast('Tableau actualisé');
-    }
+const itemsPerPage = 4;
+let currentPage = 1;
+let editingId = null;
 
-    // sidebar toggle (for small screens)
-    $('#toggleSidebar').on('click', function(){
-        $('#sidebarPanel').toggle();
+// ========== FONCTION CENTRALISÉE POUR LES FILTRES ==========
+function getFilteredData() {
+    const filterType = $('#filterType').val();
+    const filterStatut = $('#filterStatus').val();
+    const filterPeriod = $('#filterPeriod').val();
+    const filterUrgence = $('#filterUrgence').val();
+    const filterService = $('#filterService').val();
+    const filterSearch = $('#filterSearch').val()?.toLowerCase() || '';
+
+    return allData.filter(d => {
+        if (filterType && d.type_besoin !== filterType) return false;
+        if (filterStatut && d.statut !== filterStatut) return false;
+        if (filterUrgence && d.urgence !== filterUrgence) return false;
+        if (filterService && d.service_id != filterService) return false;
+        if (filterSearch && !d.demandeur_nom.toLowerCase().includes(filterSearch)) return false;
+        return true;
     });
+}
 
-    // init
-    $(document).ready(function(){
-        renderTable();
+// ========== BADGE FUNCTIONS ==========
+function badgeStatut(statut) {
+    if (!statut) return '';
+    statut = statut.toLowerCase();
+    if (statut.includes('validee')) return '<span class="badge-pill badge-validee">Validée</span>';
+    if (statut.includes('en_cours')) return '<span class="badge-pill badge-en-cours">En cours</span>';
+    if (statut.includes('traite')) return '<span class="badge-pill badge-traite">Traitée</span>';
+    return `<span class="badge-pill">${statut}</span>`;
+}
 
-        // filters change
-        $('#filterService,#filterStatut,#filterUrgence').on('change', function(){
-            currentPage = 1;
-            renderTable();
-        });
+function badgeUrgence(urgence) {
+    if (!urgence) return '';
+    urgence = urgence.toLowerCase();
+    switch (urgence) {
+        case 'faible':
+            return '<span class="badge-urgence badge-faible">Faible</span>';
+        case 'normale':
+            return '<span class="badge-urgence badge-normale">Normale</span>';
+        case 'haute':
+            return '<span class="badge-urgence badge-haute">Haute</span>';
+        case 'critique':
+            return '<span class="badge-urgence badge-critique">Critique</span>';
+        default:
+            return `<span class="badge-urgence">${urgence}</span>`;
+    }
+}
 
-        // logout btn
-        $('#logoutBtn').on('click', function(){
-            alert('Déconnexion...');
-        });
+// ========== STATISTIQUES ==========
+function renderStats() {
+    const filtered = getFilteredData();
+    const total = filtered.length;
+    const encours = filtered.filter(d => d.statut === 'en_cours').length;
+    const traitee = filtered.filter(d => d.statut === 'traite').length;
+
+    $('.stat-card.blue .stat-value').text(total);
+    $('.stat-card.green .stat-value').text(encours);
+    $('.stat-card.red .stat-value').text(traitee);
+}
+
+// ========== VÉRIFICATION DE L'ÉTAT ==========
+function canAffecter(statut) {
+    return statut !== 'en_cours' && statut !== 'traite';
+}
+
+function canModifier(statut) {
+    return statut !== 'traite';
+}
+
+// ========== TABLEAU ==========
+function renderTable() {
+    const filtered = getFilteredData();
+    const maxPage = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+   
+    if (currentPage > maxPage) currentPage = 1;
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const pageData = filtered.slice(start, start + itemsPerPage);
+
+    let html = pageData.map(d => {
+        const canAffect = canAffecter(d.statut);
+        const canMod = canModifier(d.statut);
+        
+        return `
+        <div class="table-row" data-id="${d.id}">
+            <div class="cell"><strong>${d.id}</strong></div>
+            <div class="cell">${d.date_creation}</div>
+            <div class="cell">${d.demandeur_nom}</div>
+            <div class="cell">${d.type_besoin}</div>
+            <div class="cell">${d.service_nom || 'Non affecté'}</div>
+            <div class="cell">${badgeStatut(d.statut)}</div>
+            <div class="cell">${badgeUrgence(d.urgence)}</div>
+            <div class="cell actions">
+                <button class="btn-action" onclick="openAffecterModal('${d.id}')" ${!canAffect ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                    <i class="bi bi-arrow-right-square"></i> Affecter
+                </button>
+                <button class="btn-action secondary" onclick="openStatutModal('${d.id}')" ${!canMod ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                    <i class="bi bi-pencil"></i> Modifier
+                </button>
+                <button class="btn-action link" onclick="viewDetails('${d.id}')">
+                    <i class="bi bi-eye"></i> Détails
+                </button>
+            </div>
+        </div>
+    `}).join('');
+
+    if (!html) html = '<div style="padding:20px;text-align:center;color:var(--muted)">Aucune demande trouvée</div>';
+    $('#tableBody').html(html);
+   
+    renderPagination();
+}
+
+// ========== PAGINATION ==========
+function renderPagination() {
+    const filtered = getFilteredData();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+    const $paginationList = $('#paginationList');
+    $paginationList.empty();
+
+    if (currentPage === 1) {
+        $paginationList.append(`
+            <li class="page-item disabled">
+                <span class="page-link">«</span>
+            </li>
+        `);
+    } else {
+        $paginationList.append(`
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${currentPage - 1}">«</a>
+            </li>
+        `);
+    }
+
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === currentPage) {
+            $paginationList.append(`
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">${i}</span>
+                </li>
+            `);
+        } else {
+            $paginationList.append(`
+                <li class="page-item">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `);
+        }
+    }
+
+    if (currentPage === totalPages) {
+        $paginationList.append(`
+            <li class="page-item disabled">
+                <span class="page-link">»</span>
+            </li>
+        `);
+    } else {
+        $paginationList.append(`
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${currentPage + 1}">»</a>
+            </li>
+        `);
+    }
+
+    $paginationList.find('a.page-link').on('click', (e) => {
+        e.preventDefault();
+        const pageNum = parseInt($(e.target).data('page'));
+        goToPage(pageNum);
     });
+}
 
-</script>
+function goToPage(page) {
+    const filtered = getFilteredData();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+   
+    if (page < 1 || page > totalPages) return;
+   
+    currentPage = page;
+    renderTable();
+}
 
+// ========== MODALS ==========
+function openAffecterModal(id) {
+    console.log('openAffecterModal appelée pour ID:', id);
+    const d = allData.find(x => x.id === Number(id)); // convertir id en nombre
+
+    console.log('Demande trouvée:', d);
+    
+    if (!d) {
+        console.error('Demande non trouvée');
+        return;
+    }
+    
+    if (!canAffecter(d.statut)) {
+        console.warn('Impossible d\'affecter - statut:', d.statut);
+        alert('Cette demande ne peut plus être affectée (statut: ' + d.statut + ')');
+        return;
+    }
+    
+    editingId = id;
+    $('#selectService').val('');
+    console.log('Ouverture de la modal modalAffecter');
+    openModal('modalAffecter');
+}
+
+function openStatutModal(id) {
+    console.log('openStatutModal appelée pour ID:', id);
+    const d = allData.find(x => x.id === Number(id)); // convertir id en nombre
+
+    console.log('Demande trouvée:', d);
+    
+    if (!d) {
+        console.error('Demande non trouvée');
+        return;
+    }
+    
+    if (!canModifier(d.statut)) {
+        console.warn('Impossible de modifier - statut:', d.statut);
+        alert('Cette demande ne peut plus être modifiée (statut: ' + d.statut + ')');
+        return;
+    }
+    
+    editingId = id;
+    $('#selectStatut').val('traite');
+    $('#commentaire').val('');
+    console.log('Ouverture de la modal modalStatut');
+    openModal('modalStatut');
+}
+
+function viewDetails(id) {
+    console.log('viewDetails appelée pour ID:', id);
+    const d = allData.find(x => x.id === Number(id)); // convertir id en nombre
+
+    console.log('Demande trouvée:', d);
+    
+    if (!d) {
+        console.error('Demande non trouvée');
+        return;
+    }
+    
+    const html = `
+        <div class="details-header">
+            <h4><i class="bi bi-file-text"></i> Demande #${d.id}</h4>
+            <div class="subtitle"><i class="bi bi-calendar3"></i> Créée le ${d.date_creation}</div>
+        </div>
+        
+        <div class="details-content">
+            <div class="detail-section">
+                <h5><i class="bi bi-info-circle-fill"></i> Informations Générales</h5>
+                <div class="detail-row">
+                    <div class="detail-label"><i class="bi bi-tag"></i> Type de besoin :</div>
+                    <div class="detail-value">${d.type_besoin}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label"><i class="bi bi-flag"></i> Statut :</div>
+                    <div class="detail-value">${badgeStatut(d.statut)}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label"><i class="bi bi-exclamation-triangle"></i> Urgence :</div>
+                    <div class="detail-value">${badgeUrgence(d.urgence)}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label"><i class="bi bi-building"></i> Service assigné :</div>
+                    <div class="detail-value">${d.service_nom || '<em style="color:#999;">Non affecté</em>'}</div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h5><i class="bi bi-card-text"></i> Description</h5>
+                <div style="padding:12px 0;line-height:1.7;color:#374151;">
+                    ${d.description || '<em style="color:#999;">Aucune description fournie</em>'}
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h5><i class="bi bi-people-fill"></i> Intervenants</h5>
+                <div class="detail-row">
+                    <div class="detail-label"><i class="bi bi-person-circle"></i> Demandeur :</div>
+                    <div class="detail-value">
+                        <strong>${d.demandeur_nom}</strong>
+                        ${d.demandeur_email ? `<br><small style="color:#6b7280;"><i class="bi bi-envelope"></i> ${d.demandeur_email}</small>` : ''}
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label"><i class="bi bi-person-check-fill"></i> Validateur :</div>
+                    <div class="detail-value">
+                        <strong>${d.validateur_nom || '<em style="color:#999;">Non disponible</em>'}</strong>
+                        ${d.validateur_email ? `<br><small style="color:#6b7280;"><i class="bi bi-envelope"></i> ${d.validateur_email}</small>` : ''}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn-info-custom btn-demandeur" onclick="voirDetailsDemandeur('${d.demandeur_id}')">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Profil du Demandeur</span>
+                </button>
+                <button class="btn-info-custom btn-validateur" onclick="voirDetailsValidateur('${d.validateur_id || ''}')">
+                    <i class="bi bi-person-check"></i>
+                    <span>Profil du Validateur</span>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    $('#detailsContent').html(html);
+    console.log('Ouverture de la modal modalDetails');
+    openModal('modalDetails');
+}
+
+function voirDetailsDemandeur(id) {
+    if (!id) {
+        alert('Identifiant du demandeur non disponible');
+        return;
+    }
+    // Redirection vers la page de détails du demandeur
+    window.location.href = `details_demandeur.php?id=${id}`;
+}
+
+function voirDetailsValidateur(id) {
+    if (!id) {
+        alert('Identifiant du validateur non disponible');
+        return;
+    }
+    // Redirection vers la page de détails du validateur
+    window.location.href = `details_validateur.php?id=${id}`;
+}
+
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) {
+        console.error('Modal not found:', id);
+        return;
+    }
+    
+    // Empêcher le scroll du body
+    document.body.style.overflow = 'hidden';
+    
+    // Ajouter la classe show et forcer l'affichage
+    modal.classList.add('show');
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    
+    // Fermer en cliquant sur le fond (mais pas sur le panel)
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeModal(id);
+        }
+    };
+    
+    // Empêcher la propagation des clics sur le panel
+    const panel = modal.querySelector('.modal-panel');
+    if (panel) {
+        panel.onclick = function(e) {
+            e.stopPropagation();
+        };
+    }
+    
+    console.log('Modal opened:', id);
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) {
+        console.error('Modal not found:', id);
+        return;
+    }
+    
+    // Retirer la classe show et cacher la modal
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    
+    // Réactiver le scroll du body
+    document.body.style.overflow = '';
+    
+    // Nettoyer les event listeners
+    modal.onclick = null;
+    const panel = modal.querySelector('.modal-panel');
+    if (panel) {
+        panel.onclick = null;
+    }
+    
+    console.log('Modal closed:', id);
+}
+
+// ========== ACTIONS ==========
+function affecterService() {
+    const svc = $('#selectService').val();
+    if (!svc) {
+        alert('Veuillez sélectionner un service');
+        return;
+    }
+    if (!confirm('Êtes-vous sûr de vouloir affecter cette demande ?')) return;
+
+    window.location.href = `gestion_demande.php?action=affecter_service&id_dm=${editingId}&service=${encodeURIComponent(svc)}`;
+}
+
+function modifierStatut() {
+    const stat = $('#selectStatut').val();
+    if (!stat) {
+        alert('Veuillez sélectionner un statut');
+        return;
+    }
+    if (!confirm('Êtes-vous sûr de vouloir modifier le statut ?')) return;
+
+    window.location.href = `gestion_demande.php?action=modifier_statut&id_dm=${editingId}&statut=${encodeURIComponent(stat)}`;
+}
+
+// ========== INITIALISATION ==========
+$(document).ready(function() {
+    renderStats();
+    renderTable();
+
+    $('#filterType, #filterStatus, #filterPeriod, #filterUrgence, #filterService, #filterSearch').on('change keyup', function() {
+        currentPage = 1;
+        renderStats();
+        renderTable();
+    });
+});
+    </script>
 </body>
+
 </html>
