@@ -20,5 +20,16 @@ class Demandeur {
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+           public function updateProfild($id_user, $new_password = null) {
+        if ($new_password) {
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+            $sql = "UPDATE demandeur SET  mdps_d = ? WHERE id_d = ?";
+            $stmt = $this->db->pdo->prepare($sql);
+            return $stmt->execute([ $hashed_password, $id_user]);
 }
+else{
+    return false;
 
+
+}}
+           }

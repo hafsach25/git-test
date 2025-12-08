@@ -23,6 +23,18 @@ class InfosValidateur {
         $stmt->execute([':id' => $this->id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function updateProfild($id_user, $new_password = null) {
+        if ($new_password) {
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+            $sql = "UPDATE validateur SET  mdps_v = ? WHERE id_v = ?";
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([ $hashed_password, $id_user]);
+    }
+    else{
+      return false;
+
+
+}}
 
 
 }

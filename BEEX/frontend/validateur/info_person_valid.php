@@ -9,50 +9,53 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     header('Location: ../../BEEX/frontend/authentification/login.php');
     exit;
 }
-$db = new Database();
-$conn = $db->pdo;
+$email = $_SESSION['email'] ?? null;
+// ID utilisateur connecté
+$id_user= $_SESSION['user_id'] ?? 0;
+$infosValidateur = new InfosValidateur($id_user);
+// Récupérer les infos
+$infos = $infosValidateur->getInfos();
+
+if (!$infos) {
+    echo "Utilisateur introuvable ou non connecté.";
+    exit;
+}
+
+$message = '';
+$error = '';
 
 // Page précédente
 $previousPage = $_SERVER['HTTP_REFERER'] ?? 'dashboard.php';
 
-// ID utilisateur connecté
-$id_actuel = $_SESSION['user_id'] ?? 0;
-$infosValidateur = new InfosValidateur($id_actuel);
-// Récupérer les infos
-$infos = $infosValidateur->getInfos();
-if (!$infos) {
-    die("Utilisateur introuvable.");
-}
-
 
 // Changer le mot de passe
-
-
-$id_user = $_SESSION['user_id']?? null; 
 if (isset($_POST['save_password'])) {
     $new_password = $_POST['new_password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
     if ($new_password !== $confirm_password) {
-        echo "<script>alert('Les mots de passe ne correspondent pas !');</script>";
+        $error='Les mots de passe ne correspondent pas !';
     } elseif (empty($new_password)) {
-        echo "<script>alert('Veuillez entrer un mot de passe.');</script>";
+        $error='Veuillez entrer un mot de passe.';
     } else {
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        $id_user = (int)$_SESSION['user_id']; // s'assurer que c'est un entier
-        $stmt = $conn->prepare("UPDATE validateur SET mdps_v = :mdp WHERE id_v = :id");
-        $success = $stmt->execute([
-            ':mdp' => $hashed_password,
-            ':id' => $id_user
-        ]);
-
+        $success = $infosValidateur->updateProfild( $id_user, $new_password ?: null);
         if ($success) {
-            echo "<script>alert('Mot de passe modifié avec succès !');</script>";
+            
+               $message = "Profil modifié avec succès !";
+                   // Recharger les données depuis la BDD
+               $infos = $infosValidateur->getInfos();
+
+
         } else {
-            echo "<script>alert('Erreur lors de la modification.');</script>";
+            $error = "Erreur lors de la modification.";
         }
-    }
-}
+
+
+
+
+
+
+    }}
 
 if (isset($_POST['revenir_bord'])){
    
@@ -89,6 +92,13 @@ if (isset($_POST['revenir_bord'])){
                 <div class="col-12 col-md-10 col-lg-8">
                     <div class="card shadow-sm p-4">
                         <form action="" method="post">
+                            <!-- Affichage des messages -->
+                            <?php if(!empty($message)): ?>
+                            <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
+                            <?php endif; ?>
+                            <?php if(!empty($error)): ?>
+                            <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                            <?php endif; ?>
 
                             <!-- Nom -->
                             <div class="mb-3">
@@ -112,7 +122,8 @@ if (isset($_POST['revenir_bord'])){
                             </div>
 
                             <div class="my-4">
-                                <h4>Changer le mot de passe</h4>
+
+                                <h4><i class="bi bi-lock"></i>  Changer le mot de passe</h4>
                             </div>
 
                             <div class="mb-3 position-relative">

@@ -39,14 +39,17 @@ require_once __DIR__ ."/../../../backend/demandeur/stat_cards_process.php";
         <!-- STAT CARDS -->
         <div class="stats-container">
             <div class="stat-card blue">
+                <i class="bi bi-hourglass-split text-primary"></i>
                 <div class="stat-title">Demandes en cours</div>
                 <div class="stat-value"><?= $stats['en_cours'] ?></div>
             </div>
             <div class="stat-card green">
+                <div class="stat-icon  "><i class="bi bi-check-circle-fill text-success " ></i></div>
                 <div class="stat-title">Demandes validées</div>
                 <div class="stat-value"><?= $stats['validees'] ?></div>
             </div>
             <div class="stat-card red">
+                <div class="stat-icon "><i class="bi bi-x-circle-fill text-danger  " ></i></div>
                 <div class="stat-title">Demandes rejetées</div>
                 <div class="stat-value"><?= $stats['rejetees'] ?></div>
             </div>

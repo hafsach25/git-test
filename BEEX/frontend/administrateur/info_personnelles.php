@@ -1,52 +1,61 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../../backend/demandeur_traitm/recup_par_email.php';
-require_once __DIR__ .  '/../../../backend/authentification/database.php';
-
-
 // Vérifier que l'utilisateur est connecté
 if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     header('Location: ../../BEEX/frontend/authentification/login.php');
     exit;
 }
 
+require_once __DIR__ . '/../../../backend/administrateur/profil.php';
+
+
 $email = $_SESSION['email'] ?? null;
-$demandeur = new Demandeur();
-$user = $demandeur->getByEmail($email);
+$profil = new Profil();
+$user = $profil->getByEmail_admin($email);
 if (!$user) {
     echo "Utilisateur introuvable ou non connecté.";
     exit;
 }
-$id_user = $_SESSION['user_id']?? null; 
+
+
+$id_user = $_SESSION['user_id'] ?? null;
 $message = '';
 $error = '';
+
 if (isset($_POST['save_password'])) {
-        $new_password = $_POST['new_password'] ?? '';
-        $confirm_password = $_POST['confirm_password'] ?? '';
-        if (!empty($new_password) && $new_password !== $confirm_password) {
-           $error = "Les mots de passe ne correspondent pas !";
-        }else {
-           $success = $demandeur->updateProfild( $id_user, $new_password ?: null);
-           if ($success) {
+    $nom = $_POST['nom'] ?? null;        // si tu veux permettre la modification du nom
+    $email = $_POST['email'] ?? null;    // si tu veux permettre la modification de l'email
+    $new_password = $_POST['new_password'] ?? null;
+    $confirm_password = $_POST['confirm_password'] ?? null;
+    if(empty($nom) || empty($email)) {
+    $error = "Le nom et l'email ne peuvent pas être vides !";
+}
+
+    elseif (!empty($new_password) && $new_password !== $confirm_password) {
+        $error = "Les mots de passe ne correspondent pas !";
+    } else {
+        $success = $profil->updateProfil( $id_user, $nom, $email, $new_password ?: null);
+        if ($success) {
             
-               $message = "Profil modifié avec succès !";
-                   // Recharger les données depuis la BDD
-               $user = $demandeur->getByEmail($email);
+    $message = "Profil modifié avec succès !";
+    // Mettre à jour nom et l'email dans la session
+$_SESSION['username'] = $nom;
+
+$_SESSION['email'] = $email;
+
+    // Recharger les données depuis la BDD
+    $user = $profil->getByEmail_admin($email);
 
 
-            } else {
+        } else {
             $error = "Erreur lors de la modification.";
         }
-    }}
+    }
+}
 
-if (isset($_POST['revenir_bord'])){
-   
-    // rediriger vers le dashboard du demandeur
+if (isset($_POST['revenir_bord'])) {
     header("Location: dashboard.php");
     exit;
-
-
-
 }
 
 ?>
@@ -80,47 +89,23 @@ include ("header_menu.php") ?>
                             <?php if(!empty($error)): ?>
                             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
                             <?php endif; ?>
-                                                                                    <div class="my-4">
+                                                        <div class="my-4">
 
                                 <h4><i class="bi bi-person"></i>    Informations personnelles</h4>
                             </div>
-
                             <!-- Nom -->
                             <div class="mb-3">
                                 <label class="form-label">Nom</label>
-                                <input type="text" class="form-control"
-                                    value="<?php echo htmlspecialchars($user['nom_complet_d']); ?>" readonly>
+                                <input name="nom" type="text" class="form-control"
+                                    value="<?php echo htmlspecialchars($user['nom_complet_ad']); ?>">
                             </div>
 
                             <!-- Email -->
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control"
-                                    value="<?php echo htmlspecialchars($user['email_d']); ?>" readonly>
+                                <input name="email" type="email" class="form-control"
+                                    value="<?php echo htmlspecialchars($user['email_ad']); ?>">
                             </div>
-
-                            <!-- Département -->
-                            <div class="mb-3">
-
-                                <label class="form-label">Département</label>
-                                <input type="text" class="form-control"
-                                    value="<?php echo htmlspecialchars($user['nom_dep']); ?>" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Poste</label>
-                                <input type="text" class="form-control"
-                                    value="<?php echo htmlspecialchars($user['poste_d']); ?>" readonly>
-
-
-                            </div>
-
-                            <!-- Chef -->
-                            <div class="mb-3">
-                                <label class="form-label">Chef</label>
-                                <input type="text" class="form-control"
-                                    value="<?php echo htmlspecialchars($user['chef']); ?>" readonly>
-                            </div>
-
                             <div class="my-4">
 
                                 <h4><i class="bi bi-lock"></i>  Changer le mot de passe</h4>

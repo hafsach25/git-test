@@ -55,14 +55,17 @@ $demandesTransferees = $dashboard->getDemandesTransfereAuValidateurCourant($idVa
         <div class="stats-container">
             <!-- Statistiques principales -->
             <div class="stat-card blue">
+                <div class="stat-icon"><i class="bi bi-file-earmark-text"></i></div>
                 <div class="stat-title">Demandes reçues</div>
                 <div class="stat-value"><?= $stats['recu'] ?></div>
             </div>
             <div class="stat-card green">
+                <div class="stat-icon  "><i class="bi bi-check-circle-fill text-success  " ></i></div>
                 <div class="stat-title">Demandes validées</div>
                 <div class="stat-value"><?= $stats['validees'] ?></div>
             </div>
             <div class="stat-card red">
+                <div class="stat-icon "><i class="bi bi-x-circle-fill text-danger"></i></div>
                 <div class="stat-title">Demandes rejetées</div>
                 <div class="stat-value"><?= $stats['rejetees'] ?></div>
             </div>

@@ -28,7 +28,7 @@ class EmailService {
 
             // Contenu du mail
             $mail->isHTML(true);
-            $mail->Subject = 'Code de réinitialisation BEEX';
+            $mail->Subject = 'Code de reinitialisation BEEX';
             $mail->Body    = "Votre code de confirmation est : <b>$code</b>";
 
             // Envoi
