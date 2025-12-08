@@ -91,6 +91,7 @@ $equipes = $gestionUtilisateurs->getEquipes();
         <section class="content">
             <div class="header-row">
                 <div>
+                    <a href="dashboard.php" class="retour_dashboard"><i class="bi bi-arrow-left"></i> Retour à la page d'acceuil</a>
                     <div class="page-title">Modifier l'utilisateur</div>
                     <div class="page-sub">Modifier les informations de l'utilisateur</div>
                 </div>

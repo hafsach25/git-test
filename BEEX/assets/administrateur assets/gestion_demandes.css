@@ -1,6 +1,7 @@
 
         
-        /* Styles pour les modales */
+
+     /* Styles pour les modales */
         .modal-custom {
             display: none;
             position: fixed;
@@ -15,7 +16,17 @@
             padding: 32px;
             backdrop-filter: blur(4px);
         }
-        
+
+.retour_dashboard {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    display: inline-block;
+    margin-top: 30px;
+    transition: color 0.3s;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
         .modal-custom.show {
             display: flex !important;
             animation: fadeIn 0.3s ease;
@@ -417,6 +428,7 @@
     --beex-green: #01BD96;
     --beex-red: #FF4757;
     --beex-bg: #FBFCF9;
+    --beex-orange: #FFA500;
     }
     *{box-sizing:border-box}
     body{
@@ -459,6 +471,7 @@
     .stat-card.blue .stat-value { color: var(--beex-blue); }
     .stat-card.green .stat-value { color: var(--beex-green); }
     .stat-card.red .stat-value { color: var(--beex-red); }
+    .stat-card.orange{color:var(--beex-orange);}
     /* layout */
     .app{
         display:flex;
@@ -508,7 +521,12 @@
     .header-row{
         display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;
     }
-    .page-title{font-size:20px;font-weight:700;color:#0b63f0}
+    .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
     .page-sub{color:var(--muted);}
 
     

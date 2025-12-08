@@ -66,6 +66,7 @@ $utilisateurs = $gestionUtilisateurs->getAllUsers();
         <section class="content">
             <div class="header-row">
                 <div>
+                    <a href="dashboard.php" class="retour_dashboard"><i class="bi bi-arrow-left"></i> Retour à la page d'acceuil</a>
                     <div class="page-title">Gestion des Utilisateurs</div>
                     <div class="page-sub">Créer, modifier et gérer les utilisateurs</div>
                 </div>
