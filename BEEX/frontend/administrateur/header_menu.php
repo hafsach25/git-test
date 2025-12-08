@@ -35,7 +35,7 @@
             <span>Gestion des utilisateurs</span>
 
         </a>
-        <a href="gestion_demandes.php" class="menu-item">
+        <a href="gestion_demande.php" class="menu-item">
             <span class="icon"><i class="bi bi-arrow-left-right"></i></span>
             <span>Affectation et suivi des demandes </span>
 

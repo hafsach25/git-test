@@ -93,12 +93,11 @@ $equipes = $gestionUtilisateurs->getEquipes();
         <section class="content">
             <div class="header-row">
                 <div>
+                    <a href="gestion_utilisateur.php" class="retour_dashboard"><i class="bi bi-arrow-left"></i> Retour à la page de gestion des utilisateurs</a>
                     <div class="page-title">Créer un Utilisateur</div>
                     <div class="page-sub">Ajouter un nouvel utilisateur au système</div>
                 </div>
-                <a href="gestion_utilisateur.php" class="btn btn-light">
-                    <i class="bi bi-arrow-left"></i> Retour
-                </a>
+
             </div>
 
             <div class="form-card">
