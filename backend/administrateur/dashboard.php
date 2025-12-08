@@ -37,10 +37,10 @@ class AdminDashboard {
     public function getTopChefs($limit = 5) {
         $sql = "SELECT validateur.nom_complet_v AS nom, COUNT(demande.id_dm) AS total
             FROM demande
-            JOIN validateur ON demande.id_v = validateur.id_v
+            JOIN validateur ON demande.id_validateur = validateur.id_v 
             GROUP BY validateur.id_v
             ORDER BY total DESC
-            LIMIT :limit";
+            LIMIT :limit";//a changer demande.id_validateur
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT); // lie une valeur à un paramètre nommé dans la requête SQL préparée (obligatoire pour LIMIT)
         $stmt->execute();

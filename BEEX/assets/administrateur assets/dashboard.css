@@ -243,9 +243,9 @@ body{
 .badge-status{padding:5px 10px; border-radius:20px; font-weight:bold;}
 
 
-.badge-validee{ background-color: rgba(0, 73, 249, 0.15);  color: var(--beex-blue); border: 2px solid var(--beex-blue); }
-.badge-en-cours { background-color: rgba(255, 165, 0, 0.15); color: var(--beex-orange); border: 2px solid var(--beex-orange); }
-.badge-traite { background-color: rgba(1, 189, 150, 0.15); ;color: var(--beex-green); border: 2px solid var(--beex-green); }
+ .badge-en-cours { background-color: rgba(0, 73, 249, 0.15); color: var(--beex-blue); border: 2px solid var(--beex-blue); }
+ .badge-validee { background-color: rgba(1, 189, 150, 0.15); color: var(--beex-green); border: 2px solid var(--beex-green); }
+ .badge-traite { background-color: rgba(156, 39, 176, 0.15); color: #9c27b0; border: 2px solid #9c27b0; }
         
 
 .voir-btn{
