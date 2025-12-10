@@ -37,7 +37,7 @@ class AdminDashboard {
     public function getTopChefs($limit = 5) {
         $sql = "SELECT validateur.nom_complet_v AS nom, COUNT(demande.id_dm) AS total
             FROM demande
-            JOIN validateur ON demande.id_validateur = validateur.id_v 
+            JOIN validateur ON demande.id_v = validateur.id_v 
             GROUP BY validateur.id_v
             ORDER BY total DESC
             LIMIT :limit";//a changer demande.id_validateur
