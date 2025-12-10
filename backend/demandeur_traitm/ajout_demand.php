@@ -67,6 +67,53 @@ if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) 
             ':date_limite'  => $date_limite,
             ':attachement'  => $attachmentName
         ]);
+/* =======================================================
+       🔔 ENVOI EMAIL AU DEMANDEUR
+    ======================================================= */
+    // On récupère infos demandeur
+    $q1 = $this->pdo->prepare("SELECT nom_complet_d, email_d FROM demandeur WHERE id_d = :id");
+    $q1->execute([':id' => $id_demandeur]);
+    $demandeur = $q1->fetch(PDO::FETCH_ASSOC);
+
+    // Préparation du tableau contenant les infos de la demande
+    $demandeData = [
+        "id" => $id_demande,
+        "type_besoin" => $type_besoin,
+        "description" => $description,
+        "date_creation" => date("Y-m-d H:i:s")
+    ];
+
+    require_once __DIR__ . "/../Notifications/DemandeurEmailService.php";
+    $mailDemandeur = new DemandeurEmailService();
+    $mailDemandeur->envoyerChangementStatut(
+        $demandeur['email'],
+        $demandeur['nom_complet'],
+        "en_attente",
+        $demandeData
+    );
+
+
+    /* =======================================================
+       🔔 ENVOI EMAIL AU VALIDATEUR
+    ======================================================= */
+    // Récupérer le validateur assigné automatiquement
+    $q2 = $this->pdo->query("SELECT id_v, nom_complet_v, email_v FROM validateur LIMIT 1");
+    $validateur = $q2->fetch(PDO::FETCH_ASSOC);
+
+    require_once __DIR__ . "/../Notifications/ValidateurEmailService.php";
+    $mailValidateur = new ValidateurEmailService();
+
+    $mailValidateur->envoyerNouvelleDemande(
+        $validateur['email'],
+        $validateur['nom_complet'],
+        [
+            "id" => $id_demande,
+            "nom_demandeur" => $demandeur['nom_complet'],
+            "type_besoin" => $type_besoin,
+            "urgence" => $urgence,
+            "description" => $description
+        ]
+    );
 
         return $this->pdo->lastInsertId();
     }

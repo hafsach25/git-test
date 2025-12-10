@@ -87,17 +87,17 @@ $demandes = $gestionDemandes->importerDemandes();
             <div class="stat-card blue">
                 <i class="bi bi-file-earmark-text"></i>
                 <div class="stat-title">Total des demandes</div>
-                    <div class="stat-value">0</div>
+                  
                 </div>
             <div class="stat-card green">
                 <div class="stat-icon  "><i class="bi bi-check-circle-fill text-success  "></i></div>
                 <div class="stat-title">Demandes Traitées</div>
-                    <div class="stat-value">2</div>
+                   
                 </div>
             <div class="stat-card orange ">
                 <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
                 <div class="stat-title"> Demandes En cours</div>
-                    <div class="stat-value">3</div>
+                    
                 </div>
             </div>
 
