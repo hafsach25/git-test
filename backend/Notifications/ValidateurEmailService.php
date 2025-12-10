@@ -5,7 +5,7 @@ class ValidateurEmailService extends MailerBase {
 
         $id = $demande['id'];
 
-        $subject = "📨 Nouvelle demande assignée – N°$id";
+        $subject = "Nouvelle demande assignee  N $id";
 
         $body = "
             Bonjour <b>$validateurNom</b>,<br><br>
@@ -29,7 +29,7 @@ class ValidateurEmailService extends MailerBase {
         $id = $demande['id'];
 
        
-        $subject = "🔁 Transfert automatique – Validateur indisponible";
+        $subject = "Transfert automatique – Validateur indisponible";
 
         $body = "
             Bonjour <b>$nomDest</b>,<br><br>
@@ -47,10 +47,10 @@ class ValidateurEmailService extends MailerBase {
     public function nouvelleDemande($email, $nomValidateur, $demande, $transfert = 0) {
 
         if ($transfert == 1) {
-            $subject = "🔁 Nouvelle demande transférée – N°{$demande['id']}";
+            $subject = " Nouvelle demande transférée – N°{$demande['id']}";
             $intro = "Une nouvelle demande vous a été transférée.";
         } else {
-            $subject = "📨 Nouvelle demande – N°{$demande['id']}";
+            $subject = "Nouvelle demande – N°{$demande['id']}";
             $intro = "Une nouvelle demande vous a été assignée.";
         }
 
