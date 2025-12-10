@@ -70,6 +70,9 @@ if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) 
 /* =======================================================
        🔔 ENVOI EMAIL AU DEMANDEUR
     ======================================================= */
+     $stmt = $this->pdo->prepare("SELECT id_dm FROM demande WHERE id_demandeur = :id_demandeur ORDER BY date_creation_dm DESC LIMIT 1");
+    $stmt->execute([':id_demandeur' => $id_demandeur]);
+    $lastDemandId = $stmt->fetchColumn();
     // On récupère infos demandeur
     $q1 = $this->pdo->prepare("SELECT nom_complet_d, email_d FROM demandeur WHERE id_d = :id");
     $q1->execute([':id' => $id_demandeur]);
@@ -77,7 +80,7 @@ if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) 
 
     // Préparation du tableau contenant les infos de la demande
     $demandeData = [
-        "id" => $this->pdo->lastInsertId(),
+        "id" => $lastDemandId,
         "type_besoin" => $type_besoin,
         "description" => $description,
         "date_creation" => date("Y-m-d H:i:s")
@@ -96,18 +99,23 @@ if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) 
     /* =======================================================
        🔔 ENVOI EMAIL AU VALIDATEUR
     ======================================================= */
+
     // Récupérer le validateur assigné automatiquement
-    $q2 = $this->pdo->query("SELECT id_v, nom_complet_v, email_v FROM validateur LIMIT 1");
+    $query=$this->pdo->prepare("select id_validateur from demandeur where id_d=:id_demandeur ");
+    $query->execute([':id_demandeur' => $id_demandeur]);
+    $id_validateur = $query->fetchColumn();
+    $q2 = $this->pdo->prepare("SELECT id_v, nom_complet_v, email_v FROM validateur where id_v=:id_validateur ");
+    $q2->execute([':id_validateur' => $id_validateur]);
     $validateur = $q2->fetch(PDO::FETCH_ASSOC);
 
     require_once __DIR__ . "/../Notifications/ValidateurEmailService.php";
     $mailValidateur = new ValidateurEmailService();
-
+   
     $mailValidateur->envoyerNouvelleDemande(
         $validateur['email_v'],
         $validateur['nom_complet_v'],
         [
-            "id" => $this->pdo->lastInsertId(),
+            "id" => $lastDemandId ,
             "nom_demandeur" => $demandeur['nom_complet_d'],
             "type_besoin" => $type_besoin,
             "urgence" => $urgence,
