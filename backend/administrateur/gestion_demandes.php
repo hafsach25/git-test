@@ -1,5 +1,6 @@
 <?php 
-require_once __DIR__ .'/../authentification/database.php';;
+require_once __DIR__ .'/../authentification/database.php';
+require_once __DIR__ . "/../Notifications/DemandeurEmailService.php";
 if (session_status() === PHP_SESSION_NONE) {
         session_start();
     } 
@@ -63,11 +64,51 @@ public function affecterService($idDemande, $serviceId) {
             ':service' => $serviceId,
             ':id' => $idDemande
         ]);
-        return ['success' => true, 'message' => 'Service affecté et statut mis à jour en "en_cours"'];
+         // 2️⃣ Récupération des infos du demandeur + service
+        $sqlInfo = "
+            SELECT 
+                dem.email_d AS email,
+                dem.nom_complet_d AS nom,
+                d.typedebesoin AS type_besoin,
+                s.nom_service AS service_nom
+            FROM demande d
+            JOIN demandeur dem ON d.id_demandeur = dem.id_d
+            LEFT JOIN service s ON d.id_service = s.id_service
+            WHERE d.id_dm = :id
+        ";
+        $stmtInfo = $this->pdo->prepare($sqlInfo);
+        $stmtInfo->execute([':id' => $idDemande]);
+        $info = $stmtInfo->fetch(PDO::FETCH_ASSOC);
+
+        // 3️⃣ Envoi email
+        if ($info && !empty($info['email'])) {
+          try{ 
+            $mailer = new DemandeurEmailService();
+            $mailer->envoyerChangementStatut(
+                $info['email'],
+                $info['nom'],
+                "en_cours",
+                [
+                    "id" => $idDemande,
+                    "type_besoin" => $info['type_besoin'],
+                    "service_nom" => $info['service_nom']
+                ]
+            );            } catch (Exception $e) {
+                // ⚠️ Log de l'erreur mais on ne bloque pas
+                error_log("Erreur email pour demande $idDemande : " . $e->getMessage());
+            }
+        }
+
+        return [
+            'success' => true, 
+            'message' => 'Service affecté, statut mis à jour et email envoyé ✔'
+        ];
+
     } catch (PDOException $e) {
         return ['success' => false, 'message' => 'Erreur: ' . $e->getMessage()];
     }
 }
+
 
 
     
@@ -79,11 +120,46 @@ public function affecterService($idDemande, $serviceId) {
                 ':statut' => $nouveauStatut,
                 ':id' => $idDemande
             ]);
-            return ['success' => true, 'message' => 'Statut mis à jour avec succès'];
-        } catch (PDOException $e) {
-            return ['success' => false, 'message' => 'Erreur: ' . $e->getMessage()];
+            // 2️⃣ Récupérer les informations du demandeur
+            $sqlInfo = "
+            SELECT dem.email_d AS email, dem.nom_complet_d AS nom, d.typedebesoin AS type
+            FROM demande d
+            JOIN demandeur dem ON d.id_demandeur = dem.id_d
+            WHERE d.id_dm = :id
+            ";
+            $stmtInfo = $this->pdo->prepare($sqlInfo);
+            $stmtInfo->execute([':id' => $idDemande]);
+            $info = $stmtInfo->fetch(PDO::FETCH_ASSOC);
+
+            if ($info && !empty($info['email'])) {
+             $email = $info['email'];
+             $nom = $info['nom'];
+             $type = $info['type'];
+
+            // 3️⃣ Envoi email avec classe PHPMailer
+  
+            
+            $mailer = new DemandeurEmailService();
+            $mailer->envoyerChangementStatut(
+     $info['email'],
+       $info['nom'],
+    $nouveauStatut,
+    [
+             "id" => $idDemande,
+            "type_besoin" => $info['type'],
+            "description" => "", // Vous pouvez ajouter la description si nécessaire
+            "date_creation" => "" // Vous pouvez ajouter la date de création si nécessaire
+        ]
+    );
         }
+
+        return ['success' => true, 'message' => 'Statut mis à jour et email envoyé'];
+        
+    } catch (PDOException $e) {
+        return ['success' => false, 'message' => 'Erreur: ' . $e->getMessage()];
     }
+}
+   
     public function getServices() {
     $stmt = $this->pdo->prepare("SELECT id_service, nom_service FROM service ORDER BY nom_service");
     $stmt->execute();

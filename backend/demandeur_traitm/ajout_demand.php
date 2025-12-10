@@ -47,26 +47,49 @@ if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) 
         $attachmentName = null;
     }
 }
+// Récupérer le validateur assigné
+$query = $this->pdo->prepare("SELECT id_validateur FROM demandeur WHERE id_d = :id_demandeur");
+$query->execute([':id_demandeur' => $id_demandeur]);
+$id_validateur = $query->fetchColumn();
 
+// Vérifier s'il existe un transfert actif
+$stmt = $this->pdo->prepare("
+    SELECT id_validateur_recepteur 
+    FROM transfer 
+    WHERE id_validateur_createur = :id_validateur 
+      AND NOW() BETWEEN date_debut_tr AND date_fin_tr
+    LIMIT 1
+");
+$stmt->execute([':id_validateur' => $id_validateur]);
+$validateur_recepteur = $stmt->fetchColumn();
 
+if ($validateur_recepteur) {
+    $id_validateur = $validateur_recepteur;
+    $transfere = 1;
+} else {
+    $transfere = 0;
+}
 
-        // Insert dans la table demande
-        $sql = "INSERT INTO demande 
-                (id_demandeur, typedebesoin, description_dm, urgence_dm, date_limite_dm, 
-                 piece_jointe_dm, status, date_creation_dm,transfere)
-                VALUES
-                (:id_demandeur, :type_besoin, :description, :urgence, :date_limite, 
-                 :attachement, 'en_attente', NOW(),0)";
+//inserer la demande dans table demande
+$sql = "INSERT INTO demande 
+        (id_demandeur, typedebesoin, description_dm, urgence_dm, date_limite_dm, 
+         piece_jointe_dm, status, date_creation_dm, id_validateur, transfere)
+        VALUES
+        (:id_demandeur, :type_besoin, :description, :urgence, :date_limite, 
+         :attachement, 'en_attente', NOW(), :id_validateur, :transfere)";
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':id_demandeur' => $id_demandeur,
-            ':type_besoin'  => $type_besoin,
-            ':description'  => $description,
-            ':urgence'      => $urgence,
-            ':date_limite'  => $date_limite,
-            ':attachement'  => $attachmentName
-        ]);
+$stmt = $this->pdo->prepare($sql);
+$stmt->execute([
+    ':id_demandeur' => $id_demandeur,
+    ':type_besoin'  => $type_besoin,
+    ':description'  => $description,
+    ':urgence'      => $urgence,
+    ':date_limite'  => $date_limite,
+    ':attachement'  => $attachmentName,
+    ':id_validateur' => $id_validateur,
+    ':transfere' => $transfere
+]);
+
 /* =======================================================
        🔔 ENVOI EMAIL AU DEMANDEUR
     ======================================================= */

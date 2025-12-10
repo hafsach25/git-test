@@ -442,7 +442,7 @@ function goToPage(page) {
 // ========== MODALS ==========
 function openAffecterModal(id) {
     console.log('openAffecterModal appelée pour ID:', id);
-    const d = allData.find(x => x.id === Number(id)); // convertir id en nombre
+    const d = allData.find(x => Number(x.id) === Number(id)); // convertir id en nombre
 
     console.log('Demande trouvée:', d);
     
@@ -465,7 +465,7 @@ function openAffecterModal(id) {
 
 function openStatutModal(id) {
     console.log('openStatutModal appelée pour ID:', id);
-    const d = allData.find(x => x.id === Number(id)); // convertir id en nombre
+    const d = allData.find(x => Number(x.id) === Number(id)); // convertir id en nombre
 
     console.log('Demande trouvée:', d);
     
@@ -489,7 +489,7 @@ function openStatutModal(id) {
 
 function viewDetails(id) {
     console.log('viewDetails appelée pour ID:', id);
-    const d = allData.find(x => x.id === Number(id)); // convertir id en nombre
+    const d = allData.find(x => Number(x.id) === Number(id)); // convertir id en nombre
 
     console.log('Demande trouvée:', d);
     
