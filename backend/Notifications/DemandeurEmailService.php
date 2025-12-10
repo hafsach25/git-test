@@ -36,7 +36,7 @@ class DemandeurEmailService extends MailerBase {
                 $body = "
                     Bonjour <b>$nom</b>,<br><br>
                     Votre demande a été <b>refusée</b>.<br>
-                    <b>Motif :</b> {$demande['motif_refus']}<br><br>
+    
                     Cordialement,<br>BEEX Support
                 ";
                 break;

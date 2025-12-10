@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 require_once __DIR__ . "/../authentification/database.php";
+require_once __DIR__ . "/../Notifications/DemandeurEmailService.php";
 class UpdateStatus {
     private $db;
 
@@ -39,7 +40,19 @@ class UpdateStatus {
 
         // Mettre à jour le statut
         $update = $this->db->prepare("UPDATE demande SET status = ? WHERE id_dm = ?");
-        return $update->execute([$status, $id]);
+        $r=$update->execute([$status, $id]);
+        $DemandeurEmailService = new DemandeurEmailService();
+        $query=$this->db->prepare("SELECT d.id_dm as id, d.id_demandeur, d.typedebesoin as type_besoin, d.date_creation_dm, d.status, d.description_dm as description, dem.nom_complet_d as nom , dem.email_d FROM demande d LEFT JOIN demandeur dem ON d.id_demandeur = dem.id_d WHERE d.id_dm = ?");
+        $query->execute([$id]);
+        $demandeDetails = $query->fetch(PDO::FETCH_ASSOC);
+        $DemandeurEmailService->envoyerChangementStatut(
+            $demandeDetails['email_d'],
+            $demandeDetails['nom_complet_d'],
+            $status,
+            $demandeDetails
+        );
+        return $r;
+
     }
 }
 

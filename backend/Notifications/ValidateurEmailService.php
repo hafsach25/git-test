@@ -1,15 +1,33 @@
 <?php
+include_once __DIR__ . '/../Notifications/MailerBase.php';
+include_once __DIR__ . '/../authentification/database.php';
 class ValidateurEmailService extends MailerBase {
+    private $pdo;
 
-    public function envoyerNouvelleDemande($validateurEmail, $validateurNom, $demande) {
+    public function __construct() {
+        $this->pdo = (new Database())->pdo;   // IMPORTANT
+    }
 
+    public function envoyerNouvelleDemande($validateurEmail, $validateurNom, $demande, $transfert = 0) {
         $id = $demande['id'];
+        // Vérifier si la demande est transférée depuis la BD
+        if ($this->isDemandeTransferred($id)) {
+            $transfert = 1;
+            $validateurEmail = $this->getNewValidateurEmail($id);
+            $validateurNom = $this->getNewValidateurNom($id);
+        }
 
-        $subject = "Nouvelle demande assignee  N $id";
+        if ($transfert == 1) {
+            $subject = "Nouvelle demande transférée  N $id";
+            $intro = "Une nouvelle demande vous a été transférée.";
+        } else {
+            $subject = "Nouvelle demande assignée  N $id";
+            $intro = "Une nouvelle demande vous a été attribuée.";
+        }
 
         $body = "
             Bonjour <b>$validateurNom</b>,<br><br>
-            Une nouvelle demande vous a été attribuée :<br><br>
+            $intro<br><br>
 
             <b>Demande N°</b> : $id<br>
             <b>Demandeur :</b> {$demande['nom_demandeur']}<br>
@@ -24,18 +42,60 @@ class ValidateurEmailService extends MailerBase {
         return $this->sendMail($validateurEmail, $subject, $body);
     }
 
-    public function envoyerTransfert($validateurEmail, $validateurNom, $demande) {
+   private function isDemandeTransferred($demandeId) {
+    $query = "SELECT transfere FROM demande WHERE id_dm = ?";
+    $stmt = $this->pdo->prepare($query);
+    $stmt->execute([$demandeId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $id = $demande['id'];
+    return $row && $row['transfere'] == 1;
+}
 
-       
-        $subject = "Transfert automatique – Validateur indisponible";
+
+   private function getNewValidateurEmail($demandeId) {
+    $query = "SELECT v.email_v 
+              FROM demande d 
+              JOIN validateur v ON d.id_validateur = v.id_v
+              WHERE d.id_dm = ?";
+
+    $stmt = $this->pdo->prepare($query);
+    $stmt->execute([$demandeId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row ? $row['email_v'] : '';
+}
+
+
+
+private function getNewValidateurNom($demandeId) {
+    $query = "SELECT v.nom_complet_v 
+              FROM demande d 
+              JOIN validateur v ON d.id_validateur = v.id_v
+              WHERE d.id_dm = ?";
+
+    $stmt = $this->pdo->prepare($query);
+    $stmt->execute([$demandeId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row ? $row['nom_complet_v'] : '';
+}
+
+
+
+    public function envoyerNotificationTransfert($validateurEmail, $dateDebut, $dateFin, $raison, $nomValidateurCreateur) {
+        $nomSource = $nomValidateurCreateur;
+        $subject = "Transfert automatique  Validateur indisponible";
 
         $body = "
-            Bonjour <b>$nomDest</b>,<br><br>
-
+            Bonjour,<br><br>
             Le validateur <b>$nomSource</b> est actuellement indisponible.<br>
-            Toutes ses demandes en attente ont été automatiquement transférées vers votre espace.<br><br>
+            Toutes ses demandes en attente vont etre automatiquement transférées vers votre espace.<br><br>
+            <b>Période d'indisponibilité :</b><br>
+            Du : $dateDebut<br>
+            Au : $dateFin<br><br>
+
+            <b>Raison :</b><br>
+            $raison<br><br>
 
             Merci d'assurer le suivi durant cette période.<br><br>
             Cordialement,<br>
@@ -44,29 +104,5 @@ class ValidateurEmailService extends MailerBase {
 
         return $this->sendMail($validateurEmail, $subject, $body);
     }
-    public function nouvelleDemande($email, $nomValidateur, $demande, $transfert = 0) {
-
-        if ($transfert == 1) {
-            $subject = " Nouvelle demande transférée – N°{$demande['id']}";
-            $intro = "Une nouvelle demande vous a été transférée.";
-        } else {
-            $subject = "Nouvelle demande – N°{$demande['id']}";
-            $intro = "Une nouvelle demande vous a été assignée.";
-        }
-
-        $body = "
-            Bonjour <b>$nomValidateur</b>,<br><br>
-            $intro<br><br>
-
-            <b>Numéro :</b> {$demande['id']}<br>
-            <b>Demandeur :</b> {$demande['demandeur']}<br>
-            <b>Type :</b> {$demande['type']}<br>
-            <b>Urgence :</b> {$demande['urgence']}<br><br>
-
-            Merci de procéder à la validation.<br><br>
-            Cordialement,<br><b>BEEX</b>
-        ";
-
-        return $this->sendMail($email, $subject, $body);
-    }
+  
 }
