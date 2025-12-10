@@ -1,8 +1,9 @@
 <?php
+require_once  'MailerBase.php';
 class DemandeurEmailService extends MailerBase {
 
     public function envoyerChangementStatut($email, $nom, $statut, $demande) {
-
+        $mailer=new MailerBase();
         $id = $demande['id'];
         $type = $demande['type_besoin'];
 
@@ -58,7 +59,7 @@ class DemandeurEmailService extends MailerBase {
                 break;
         }
 
-        return $this->sendMail($email, $subject, $body);
+        return $mailer->sendMail($email, $subject, $body);
     }
     
 }

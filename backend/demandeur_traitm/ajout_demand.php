@@ -77,7 +77,7 @@ if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) 
 
     // Préparation du tableau contenant les infos de la demande
     $demandeData = [
-        "id" => $id_demande,
+        "id" => $this->pdo->lastInsertId(),
         "type_besoin" => $type_besoin,
         "description" => $description,
         "date_creation" => date("Y-m-d H:i:s")
@@ -86,8 +86,8 @@ if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) 
     require_once __DIR__ . "/../Notifications/DemandeurEmailService.php";
     $mailDemandeur = new DemandeurEmailService();
     $mailDemandeur->envoyerChangementStatut(
-        $demandeur['email'],
-        $demandeur['nom_complet'],
+        $demandeur['email_d'],
+        $demandeur['nom_complet_d'],
         "en_attente",
         $demandeData
     );
@@ -104,11 +104,11 @@ if (isset($_FILES['attachments']) && !empty($_FILES['attachments']['name'][0])) 
     $mailValidateur = new ValidateurEmailService();
 
     $mailValidateur->envoyerNouvelleDemande(
-        $validateur['email'],
-        $validateur['nom_complet'],
+        $validateur['email_v'],
+        $validateur['nom_complet_v'],
         [
-            "id" => $id_demande,
-            "nom_demandeur" => $demandeur['nom_complet'],
+            "id" => $this->pdo->lastInsertId(),
+            "nom_demandeur" => $demandeur['nom_complet_d'],
             "type_besoin" => $type_besoin,
             "urgence" => $urgence,
             "description" => $description
