@@ -164,7 +164,7 @@ $demandesTransferees=$dsh-> getDemandesTransfereAuValidateurCourant($idValidateu
                             <?php 
                             switch ($demande['statut']) {
                                 case 'en_attente':
-                                    $badge = 'badge-en-attente'; $txt = 'En attente'; break;
+                                    $badge = 'badge-attente'; $txt = 'En attente'; break;
                                 case 'en_cours':
                                     $badge = 'badge-en-cours'; $txt = 'En cours'; break;
                                 case 'validee':

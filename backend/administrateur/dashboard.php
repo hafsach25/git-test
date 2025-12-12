@@ -60,17 +60,19 @@ class AdminDashboard {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
         public function getDernieresDemandes($limit = 5) {
-        $sql="SELECT dm.id_dm AS id, d.nom_complet_d AS demandeur, t.nom_tb type, dm.date_creation_dm AS date_creation, dm.status AS status
-                                     FROM demande dm
-                                     JOIN demandeur d ON dm.id_demandeur = d.id_d
-                                     JOIN type_besoin t ON dm.typedebesoin = t.id_tb
-                                     WHERE dm.status IN ('en_cours', 'validee', 'traite')
-                                     ORDER BY date_creation_dm DESC 
-                                     LIMIT :limit";
-        $stmt = $this->pdo->prepare($sql);
+        $sql="
+        SELECT d.id_dm AS id, d.typedebesoin AS type, d.status , d.date_creation_dm AS date_creation, 
+               dem.nom_complet_d AS demandeur, s.nom_service AS service_nom
+        FROM demande d
+        LEFT JOIN demandeur dem ON d.id_demandeur = dem.id_d
+        LEFT JOIN service s ON d.id_service = s.id_service
+        WHERE d.status IN ('validee', 'en_cours', 'traite')
+        ORDER BY d.date_creation_dm DESC
+        LIMIT :limit";
+       $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);   
     }
 
 

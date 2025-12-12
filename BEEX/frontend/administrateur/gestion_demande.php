@@ -83,23 +83,27 @@ $demandes = $gestionDemandes->importerDemandes();
             </div>
 
             <!-- Stats -->
-        <div class="stats-container">
-            <div class="stat-card blue">
-                <i class="bi bi-file-earmark-text"></i>
-                <div class="stat-title">Total des demandes</div>
-                  
-                </div>
-            <div class="stat-card green">
-                <div class="stat-icon  "><i class="bi bi-check-circle-fill text-success  "></i></div>
-                <div class="stat-title">Demandes Traitées</div>
-                   
-                </div>
-            <div class="stat-card orange ">
-                <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
-                <div class="stat-title"> Demandes En cours</div>
-                    
-                </div>
-            </div>
+        <!-- Stats -->
+<div class="stats-container">
+    <div class="stat-card blue">
+        <i class="bi bi-file-earmark-text"></i>
+        <div class="stat-title">Total des demandes</div>
+        <div class="stat-value"></div>
+    </div>
+
+    <div class="stat-card green">
+        <div class="stat-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
+        <div class="stat-title">Demandes Traitées</div>
+        <div class="stat-value"></div>
+    </div>
+
+    <div class="stat-card orange">
+        <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+        <div class="stat-title">Demandes En cours</div>
+        <div class="stat-value"></div>
+    </div>
+</div>
+
 
             <!-- Filtres -->
             <div class="filters-card">
@@ -315,8 +319,8 @@ function renderStats() {
     const traitee = filtered.filter(d => d.statut === 'traite').length;
 
     $('.stat-card.blue .stat-value').text(total);
-    $('.stat-card.green .stat-value').text(encours);
-    $('.stat-card.red .stat-value').text(traitee);
+    $('.stat-card.orange .stat-value').text(encours);
+    $('.stat-card.green .stat-value').text(traitee);
 }
 
 // ========== VÉRIFICATION DE L'ÉTAT ==========
@@ -550,16 +554,7 @@ function viewDetails(id) {
                 </div>
             </div>
             
-            <div class="action-buttons">
-                <button class="btn-info-custom btn-demandeur" onclick="voirDetailsDemandeur('${d.demandeur_id}')">
-                    <i class="bi bi-person-circle"></i>
-                    <span>Profil du Demandeur</span>
-                </button>
-                <button class="btn-info-custom btn-validateur" onclick="voirDetailsValidateur('${d.validateur_id || ''}')">
-                    <i class="bi bi-person-check"></i>
-                    <span>Profil du Validateur</span>
-                </button>
-            </div>
+            
         </div>
     `;
     
