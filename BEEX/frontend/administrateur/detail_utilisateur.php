@@ -54,9 +54,7 @@ $nom = $nomPrenom[0] ?? $user['nom_prenom'];
                     <div class="page-sub">Informations complètes de l'utilisateur</div>
                 </div>
                 <div>
-                    <a href="gestion_utilisateur.php" class="btn btn-light me-2">
-                        <i class="bi bi-arrow-left"></i> Retour
-                    </a>
+                    
                     <a href="modifier_utilisateur.php?id=<?= htmlspecialchars($idUser) ?>&type=<?= htmlspecialchars($typeUser) ?>" class="btn btn-primary">
                         <i class="bi bi-pencil"></i> Modifier
                     </a>

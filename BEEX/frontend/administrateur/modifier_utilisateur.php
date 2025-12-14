@@ -95,9 +95,7 @@ $equipes = $gestionUtilisateurs->getEquipes();
                     <div class="page-title">Modifier l'utilisateur</div>
                     <div class="page-sub">Modifier les informations de l'utilisateur</div>
                 </div>
-                <a href="gestion_utilisateur.php" class="btn btn-light">
-                    <i class="bi bi-arrow-left"></i> Retour
-                </a>
+                
             </div>
 
             <div class="form-card">

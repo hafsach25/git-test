@@ -238,10 +238,7 @@ $demandes = $gestionDemandes->importerDemandes();
                         <option value="traite" selected>Traitée</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label"><i class="bi bi-chat-left-text"></i> Commentaire (optionnel)</label>
-                    <textarea id="commentaire" class="form-control" rows="4" placeholder="Ajouter un commentaire sur cette modification..."></textarea>
-                </div>
+               
             </div>
             <div class="modal-footer">
                 <button class="btn btn-light" onclick="closeModal('modalStatut')"><i class="bi bi-x-circle"></i> Annuler</button>
